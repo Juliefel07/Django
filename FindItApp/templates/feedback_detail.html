@@ -1,0 +1,10 @@
+<!-- feedback_detail.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Feedback Details</h2>
+<p><strong>Feedback from {{ feedback.user.username }}</strong></p>
+<p>{{ feedback.feedbacks }}</p>
+<p>Rating: {{ feedback.rating }}</p>
+<p>Created at: {{ feedback.created_at }}</p>
+{% endblock %}

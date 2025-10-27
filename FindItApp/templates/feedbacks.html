@@ -1,0 +1,481 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Feedback{% endblock %}
+
+{% block content %}
+<div class="feedback-page">
+  <!-- Left: Posts -->
+  <div class="posts-section">
+    <h2>Recent Feedback</h2>
+    {% for fb in feedback_list %}
+    <div class="post">
+      <div class="post-header">
+        <div>
+         <strong>{{ fb.name }}</strong>
+          <span class="stars">
+            {% for i in "12345" %}
+              {% if forloop.counter <= fb.rating %}
+                ★
+              {% else %}
+                ☆
+              {% endif %}
+            {% endfor %}
+          </span>
+        </div>
+
+        <!-- ✅ Three-dot menu -->
+        <div class="menu-container">
+          <button class="menu-btn">⋮</button>
+          <div class="dropdown-menu">
+            <button class="edit-btn" 
+                    data-id="{{ fb.id }}" 
+                    data-text="{{ fb.feedbacks }}" 
+                    data-rating="{{ fb.rating }}">Edit</button>
+            <form method="POST" action="{% url 'delete_feedback' fb.id %}" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="delete-btn">Delete</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <p>{{ fb.feedbacks }}</p>
+    </div>
+    {% empty %}
+    <p>No feedback yet. Be the first to share your thoughts!</p>
+    {% endfor %}
+  </div>
+
+  <!-- Right: Create Feedback -->
+  <div class="create-post">
+    <h3>Share Your Thoughts</h3>
+    <form method="POST">
+      {% csrf_token %}
+      <input
+  type="text"
+  name="name"
+  placeholder="Enter your name"
+  style="width:100%; padding:10px; border-radius:8px; border:1px solid #ccc; margin-bottom:10px;"
+  required
+/>
+
+   <!-- ✅ Emoji Picker Container -->
+<div class="textarea-container">
+  <textarea
+    id="feedbackTextarea"
+    name="feedbacks"
+    rows="4"
+    placeholder="What's on your mind?"
+    required
+  ></textarea>
+
+  <!-- 😊 Emoji Button -->
+  <button type="button" id="emoji-btn" class="emoji-button">😊</button>
+
+  <!-- ✨ Floating Emoji Picker -->
+  <div id="emoji-picker" class="emoji-picker">
+    <div class="emoji">😀</div>
+    <div class="emoji">😂</div>
+    <div class="emoji">😍</div>
+    <div class="emoji">😊</div>
+    <div class="emoji">😎</div>
+    <div class="emoji">🤩</div>
+    <div class="emoji">😢</div>
+    <div class="emoji">😡</div>
+    <div class="emoji">🥳</div>
+    <div class="emoji">😭</div>
+    <div class="emoji">🤔</div>
+    <div class="emoji">❤️</div>
+    <div class="emoji">🔥</div>
+    <div class="emoji">👍</div>
+    <div class="emoji">👎</div>
+    <div class="emoji">👏</div>
+    <div class="emoji">🙏</div>
+    <div class="emoji">💯</div>
+  </div>
+</div>
+
+
+      <div class="stars-input">
+        {% for i in "12345" %}
+        <span class="star" data-value="{{ forloop.counter }}">☆</span>
+        {% endfor %}
+        <input type="hidden" name="rating" id="rating" value="0">
+      </div>
+
+      <button type="submit">Post</button>
+    </form>
+  </div>
+</div>
+
+<!-- ✅ Edit Modal -->
+<div id="editModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h3>Edit Feedback</h3>
+    <form id="editForm" method="POST">
+      {% csrf_token %}
+      <textarea id="editFeedbackText" name="feedbacks" rows="4" required></textarea>
+
+      <div class="stars-input-edit">
+        {% for i in "12345" %}
+        <span class="star-edit" data-value="{{ forloop.counter }}">☆</span>
+        {% endfor %}
+        <input type="hidden" id="editRating" name="rating" value="0">
+      </div>
+
+      <button type="submit">Save Changes</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<style>
+.feedback-page {
+  display: flex;
+  justify-content: space-between;
+  width: 1600px;
+  margin: 40px auto;
+  gap: 25px;
+}
+/* Always visible Delete button */
+.always-delete-form {
+  display: inline-block;
+  margin-left: 10px;
+}
+/* --- Emoji Picker Styles --- */
+.textarea-container {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+}
+
+.emoji-button {
+  position: absolute;
+  right: 10px;
+  bottom: 15px;
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* Floating Emoji Picker Popup */
+.emoji-picker {
+  display: none;
+  position: absolute;
+  bottom: 45px;
+  right: 10px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  padding: 10px;
+  width: 240px;
+  flex-wrap: wrap;
+  gap: 6px;
+  z-index: 100;
+}
+
+.emoji-picker.active {
+  display: flex;
+}
+
+.emoji-picker .emoji {
+  font-size: 22px;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.emoji-picker .emoji:hover {
+  background: #f0f0f0;
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.posts-section {
+  flex: 1.7;
+  padding: 20px;
+  background: #7f7f80; /* lighter background for contrast */
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Individual feedback container */
+.post {
+  background: #ffffff; /* card background */
+  padding: 15px 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+   z-index: 1;
+}
+
+.post:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.post .stars {
+  color: gold;
+  font-size: 18px;
+}
+
+.post p {
+  font-size: 15px;
+  line-height: 1.5;
+  color: #333;
+}
+
+/* ✅ 3-dot menu styles */
+.menu-container {
+  position: static;
+  display: inline-block;
+}
+.menu-btn {
+  background: transparent;
+  border: none;
+  font-size: 30px;
+  cursor: pointer;
+}
+.dropdown-container {
+  position: relative !important;
+  display: inline-block !important;
+}
+
+.dropdown-menu {
+  position: absolute !important;
+  top: 50px !important;
+  right: 0 !important;
+  width: 260px !important;
+  background: white !important;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15) !important;
+}
+
+.dropdown-menu {
+  display: none;
+  position: fixed;
+  right: 0;
+  bottom: auto; /* remove fixed bottom */
+  top: 50px;    /* default dropdown below the button */
+  background: #ffffff;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  z-index: 9999; /* ensure above everything */
+}
+
+/* Flip dropdown if it would overflow viewport */
+.menu-container.dropdown-top .dropdown-menu {
+  top: auto;
+  bottom: 35px;
+}
+.dropdown-menu button {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 8px; /* Add rounded corners */
+  transition: background 0.2s;
+  color: black;
+}
+.dropdown-menu .delete-btn{
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 8px; /* Add rounded corners */
+  transition: background 0.2s;
+  color: black;
+  margin-top: 5;
+
+}
+.dropdown-menu button:hover {
+  background: #10174a;
+}
+.dropdown-menu .edit-btn:hover {
+  background: #277ffa; /* blue */
+  color: rgb(0, 0, 0);
+  height: 15;
+  border-radius: 0px;
+}
+
+/* Delete button hover */
+.dropdown-menu .delete-btn:hover {
+  background: #277ffa; /* red */
+  color: rgb(3, 0, 0);
+  border-radius: 0px;
+}
+
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 50;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.4);
+  justify-content: center;
+  align-items: center;
+}
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+}
+.close {
+  float: right;
+  cursor: pointer;
+  font-size: 22px;
+}
+
+/* Stars */
+.stars-input, .stars-input-edit {
+  margin: 10px 0;
+  font-size: 24px;
+  cursor: pointer;
+}
+.star, .star-edit {
+  color: #ccc;
+  transition: color 0.2s;
+}
+.star.active, .star-edit.active {
+  color: gold;
+}
+.create-post textarea {
+  width: 500px;                /* make it stretch to container width */
+  padding: 12px;              /* add breathing space inside */
+  border-radius: 8px;         /* smooth rounded corners */
+  border: 1px solid #ccc;     /* light gray border */
+  resize: none;               /* disable manual resizing (optional) */
+  font-size: 15px;
+  font-family: inherit;
+  box-sizing: border-box;     /* ensures padding doesn’t break width */
+  margin-bottom: 10px;
+}
+.create-post {
+  width: 500px;
+  height: 350px;
+  background: #fff;
+  padding: 25px; /* a bit more breathing room */
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  align-items: right;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // ⭐ Rating (create form)
+  const stars = document.querySelectorAll('.stars-input .star');
+  const ratingInput = document.getElementById('rating');
+  stars.forEach(star => {
+    star.addEventListener('click', () => {
+      const rating = parseInt(star.dataset.value);
+      ratingInput.value = rating;
+      stars.forEach(s => s.classList.toggle('active', parseInt(s.dataset.value) <= rating));
+    });
+  });
+
+  // ✅ Dropdown 3-dot menu
+  document.querySelectorAll('.menu-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation(); // prevent window click from firing
+    const dropdown = btn.nextElementSibling;
+    document.querySelectorAll('.posts-section .dropdown-menu').forEach(menu => {
+      if (menu !== dropdown) menu.style.display = 'none';
+    });
+    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+  });
+});
+
+window.addEventListener('click', () => {
+  // only hide dropdowns inside posts-section
+  document.querySelectorAll('.posts-section .dropdown-menu').forEach(menu => menu.style.display = 'none');
+});
+
+  // ✅ Edit Modal
+  const modal = document.getElementById('editModal');
+  const closeModal = document.querySelector('.close');
+  const editForm = document.getElementById('editForm');
+  const editText = document.getElementById('editFeedbackText');
+  const editRating = document.getElementById('editRating');
+  const editStars = document.querySelectorAll('.star-edit');
+
+  document.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const fbId = btn.dataset.id;
+      const fbText = btn.dataset.text;
+      const fbRating = parseInt(btn.dataset.rating);
+
+      editText.value = fbText;
+      editRating.value = fbRating;
+
+      editStars.forEach(s => s.classList.toggle('active', parseInt(s.dataset.value) <= fbRating));
+      editForm.action = `/feedback/${fbId}/edit/`;
+      modal.style.display = 'flex';
+    });
+  });
+
+  editStars.forEach(star => {
+    star.addEventListener('click', () => {
+      const rating = parseInt(star.dataset.value);
+      editRating.value = rating;
+      editStars.forEach(s => s.classList.toggle('active', parseInt(s.dataset.value) <= rating));
+    });
+  });
+
+  closeModal.onclick = () => modal.style.display = 'none';
+  window.onclick = e => { if (e.target === modal) modal.style.display = 'none'; };
+
+// ✅ Floating Emoji Picker Logic
+const emojiBtn = document.getElementById('emoji-btn');
+const emojiPicker = document.getElementById('emoji-picker');
+const textarea = document.getElementById('feedbackTextarea');
+
+emojiBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  emojiPicker.classList.toggle('active');
+});
+
+document.querySelectorAll('.emoji').forEach(emoji => {
+  emoji.addEventListener('click', () => {
+    textarea.value += emoji.textContent;
+    emojiPicker.classList.remove('active');
+  });
+});
+
+window.addEventListener('click', (e) => {
+  if (!emojiPicker.contains(e.target) && e.target !== emojiBtn) {
+    emojiPicker.classList.remove('active');
+  }
+});
+
+});
+</script>
+{% endblock %}

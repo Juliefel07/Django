@@ -1,0 +1,56 @@
+<!-- notifications.html -->
+{% extends 'base.html' %}
+
+{% block title %}Notifications{% endblock %}
+{% block body_class %}notifications{% endblock %}
+
+{% block content %}
+<section class="notifications-section">
+    <h2>Your Notifications</h2>
+
+    {% if notifications %}
+        <ul>
+            {% for notification in notifications %}
+                <li class="notification-item {% if notification.is_read %}read{% else %}unread{% endif %}" 
+                    data-notification-id="{{ notification.id }}">
+                    <a href="{% url 'feedback_detail' notification.id %}">{{ notification.message }}</a>
+                    
+                    {% if not notification.is_read %}
+                        <!-- Mark as Read Link -->
+                        <a href="{% url 'mark_notification_read' id=notification.id %}" class="mark-read-link">Mark as Read</a>
+                    {% else %}
+                        <!-- If notification is read -->
+                        <span class="read-status">Read</span>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>You have no notifications.</p>
+    {% endif %}
+</section>
+
+<style>
+.notification-item {
+    padding: 15px;
+    background: white;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    border-radius: 8px;
+}
+
+.notification-item a {
+    text-decoration: none;
+    color: #333;
+}
+
+.notification-item a:hover {
+    font-weight: bold;
+}
+
+.read-status {
+    color: green;
+    font-weight: bold;
+}
+</style>
+{% endblock %}

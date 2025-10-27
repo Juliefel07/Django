@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% block title %}Item Detail{% endblock %}
+
+{% block content %}
+<style>
+  body {
+    background-color: #f8f7fa;
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+    font-weight: 700;
+  }
+
+  .dashboard-box {
+    background-color: #ffffff;
+    width: 60%;
+    margin: 0 auto;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+  }
+
+  .dashboard-box:hover {
+    transform: translateY(-4px);
+  }
+
+  .dashboard-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .dashboard-table th {
+    text-align: left;
+    width: 180px;
+    color: #555;
+    padding: 10px 0;
+  }
+
+  .dashboard-table td {
+    padding: 10px 0;
+    color: #222;
+    font-weight: 500;
+  }
+
+  .status {
+    font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+
+  .status-lost {
+    background-color: #f44336;
+    color: white;
+  }
+
+  .status-found {
+    background-color: #2196f3;
+    color: white;
+  }
+
+  .status-claimed {
+    background-color: #4caf50;
+    color: white;
+  }
+
+  .back-button {
+    text-align: center;
+    margin-top: 25px;
+  }
+
+  .back-button a {
+    background-color: #333;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+  }
+
+  .back-button a:hover {
+    background-color: #555;
+  }
+</style>
+
+<h1>Lost Item Detail</h1>
+
+<div class="dashboard-box">
+  <table class="dashboard-table">
+    <tr>
+      <th>Title:</th>
+      <td>{{ item.title }}</td>
+    </tr>
+    <tr>
+      <th>Description:</th>
+      <td>{{ item.description }}</td>
+    </tr>
+    <tr>
+      <th>Reported by:</th>
+      <td>{{ item.owner.school_id }}</td>
+    </tr>
+    <tr>
+      <th>Status:</th>
+      <td>
+        {% if item.claimed %}
+          <span class="status status-claimed">Claimed</span>
+        {% elif item.found %}
+          <span class="status status-found">Found</span>
+        {% else %}
+          <span class="status status-lost">Lost</span>
+        {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <th>Date Reported:</th>
+      <td>{{ item.created_at|date:"Y-m-d H:i" }}</td>
+    </tr>
+  </table>
+
+  <div class="back-button">
+    <a href="{% url 'lost_item_report' %}">Back to Dashboard</a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% load static %}
+
+<div id="tipsPageContent">
+  <div class="tips-container">
+    <h2>FindIt Tips & Best Practices 🕵️‍♀️</h2>
+    <p>Follow these helpful reminders to find lost things faster — and return found items easily!</p>
+
+    <div class="tips-grid">
+      <div class="tip-card">
+        <img src="{% static 'images/tips-report.png' %}" alt="Report quickly">
+        <h3>Report Immediately</h3>
+        <p>Post a lost item as soon as possible. The sooner others know, the better the chances someone spots it.</p>
+      </div>
+
+      <div class="tip-card">
+        <img src="{% static 'images/tips-details.png' %}" alt="Provide details">
+        <h3>Be Descriptive</h3>
+        <p>Include clear details — color, brand, unique marks, and where you lost or found it.</p>
+      </div>
+
+      <div class="tip-card">
+        <img src="{% static 'images/tips-contact.png' %}" alt="Stay reachable">
+        <h3>Stay Reachable</h3>
+        <p>Keep your contact info updated so people can reach you easily when they find your item.</p>
+      </div>
+
+      <div class="tip-card">
+        <img src="{% static 'images/tips-kindness.png' %}" alt="Be honest">
+        <h3>Give Back with Kindness</h3>
+        <p>If you find something, post it! Someone out there might be desperately looking for it.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<style>
+  .tips-container {
+    padding: 20px;
+    text-align: center;
+  }
+
+  .tips-container h2 {
+    font-size: 26px;
+    margin-bottom: 10px;
+    color: #2a72ed;
+  }
+
+  .tips-container p {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 30px;
+  }
+
+  .tips-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+  }
+
+  .tip-card {
+    background: #f8f9ff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    width: 260px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .tip-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  }
+
+  .tip-card img {
+    width: 80px;
+    height: auto;
+    margin-bottom: 15px;
+  }
+
+  .tip-card h3 {
+    font-size: 18px;
+    color: #0033cc;
+    margin-bottom: 10px;
+  }
+
+  .tip-card p {
+    font-size: 14px;
+    color: #444;
+  }
+</style>

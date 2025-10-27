@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FindIt - {% block title %}{% endblock %}</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'finditapp/css/styles.css' %}" />
+
+  <style>
+    /* ================== GENERAL STYLES ================== */
+    body {
+      font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background-color: #faf5f9;
+      color: #E2A16F;
+    }
+    /* Notification Dropdown Styles */
+.notifications {
+  position: relative;
+}
+
+.notification-count {
+  background-color: #f00;
+  color: #fff;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 14px;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+.notification-list {
+  display: none;
+  position: absolute;
+  background-color: white;
+  top: 30px;
+  right: 0;
+  width: 300px;
+  max-height: 300px;
+  overflow-y: auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 9999;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.notification-list.show {
+  display: block;
+}
+
+.notification-item {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.notification-item:hover {
+  background-color: #f9f9f9;
+}
+
+.notification-item small {
+  font-size: 12px;
+  color: #999;
+}
+
+
+    body.homepage {
+      background-image: url('{% static "images/lostfound.png" %}');
+      background-size: contain;
+      background-position: top center;
+      background-repeat: no-repeat;
+      background-color: #faf5f9;
+      min-height: 100vh;
+      color: black;
+    }
+
+    header.main-header {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 18px 40px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 10000;
+      height: 70px;
+      backdrop-filter: blur(12px);
+    }
+.notifications {
+  position: relative;
+}
+
+.notification-count {
+  background-color: #f00;
+  color: #fff;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 14px;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+.notification-list {
+  display: none;
+  position: absolute;
+  background-color: white;
+  top: 30px;
+  right: 0;
+  width: 300px;
+  max-height: 300px;
+  overflow-y: auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 9999;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.notification-list.show {
+  display: block;
+}
+
+    .logo {
+      font-weight: 800;
+      font-size: 28px;
+      color: #3a86ff;
+      letter-spacing: 2px;
+      user-select: none;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    nav {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      position: relative;
+    }
+
+    nav a {
+      color: #333;
+      font-weight: 600;
+      font-size: 20px;
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      font-family: 'Inter', sans-serif;
+    }
+
+    nav a:hover {
+      color: #fafafa;
+      background-color: #689563;
+    }
+
+    nav a.auth-link {
+      background-color: #2a72ed;
+      color: white;
+      font-weight: 700;
+      padding: 10px 18px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(58, 134, 255, 0.35);
+      transition: 0.25s ease;
+      margin-right: 65px;
+    }
+
+    nav a.auth-link:hover {
+      background-color: #1e57c1;
+      box-shadow: 0 6px 16px rgba(37, 94, 196, 0.5);
+      color: #fff;
+    }
+
+    /* ================== HAMBURGER + DROPDOWN ================== */
+    #dropdownToggle {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 24px;
+      padding: 0 10px;
+      color: #a19c9c;
+      position: relative;
+      z-index: 2000;
+      margin-right: 100;
+    }
+
+    .dropdown-container {
+      position: relative;
+      z-index: 5000;
+    }
+
+    .dropdown-menu {
+      display: none;
+      flex-direction: column;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+      width: 260px;
+      padding: 10px 0;
+      position: absolute;
+      top: 50px;
+      right: 0;
+      z-index: 9999 !important;
+      overflow: visible !important;
+    }
+
+    .dropdown-menu.show {
+      display: flex;
+    }
+
+    .dropdown-menu a,
+    .dropdown-menu label {
+      padding: 10px 20px;
+      font-size: 16px;
+      color: #333;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .dropdown-menu a:hover,
+    .dropdown-menu label:hover {
+      background-color: #f0f0f0;
+    }
+
+    .appearance-options {
+      padding-left: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 5px;
+    }
+
+    header, nav, .login-wrapper, .login-card {
+      overflow: visible !important;
+      z-index: auto;
+    }
+
+    /* ================== DARK MODE ================== */
+    body.dark-mode {
+      background-color: #1e1e1e;
+      color: #f5f5f5;
+    }
+
+    body.dark-mode header.main-header {
+      background: rgba(30, 30, 30, 0.9);
+      box-shadow: 0 2px 8px rgba(255, 255, 255, 0.05);
+    }
+
+    body.dark-mode .logo {
+      color: #82aaff;
+    }
+
+    body.dark-mode nav a {
+      color: #f5f5f5;
+    }
+
+    body.dark-mode nav a:hover {
+      background-color: #333;
+      color: #fff;
+    }
+
+    body.dark-mode nav a.auth-link {
+      background-color: #3a86ff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    body.dark-mode .dropdown-menu {
+      background-color: #2a2a2a;
+      border-color: #444;
+    }
+
+    body.dark-mode .dropdown-menu a,
+    body.dark-mode .dropdown-menu label {
+      color: #f5f5f5;
+    }
+
+    body.dark-mode .dropdown-menu a:hover,
+    body.dark-mode .dropdown-menu label:hover {
+      background-color: #615e5e;
+    }
+
+    body.dark-mode footer {
+      color: #bbb;
+    }
+
+    body.dark-mode .message,
+    body.dark-mode .card,
+    body.dark-mode input,
+    body.dark-mode textarea {
+      background-color: #333;
+      color: #f5f5f5;
+      border-color: #555;
+    }
+
+    /* ================== MOBILE ================== */
+    @media (max-width: 768px) {
+      nav {
+        display: none;
+        position: absolute;
+        top: 70px;
+        right: 0;
+        width: 100%;
+        flex-direction: column;
+        background-color: white;
+        text-align: center;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        padding: 15px 0;
+      }
+
+      nav.active {
+        display: flex;
+      }
+
+      nav a {
+        font-size: 18px;
+        padding: 10px;
+        margin: 5px 0;
+      }
+    }
+
+    main {
+      padding-top: 120px;
+      margin: 0 auto;
+      text-align: center;
+      background: transparent !important;
+      box-shadow: none !important;
+      color: black;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px 0;
+      font-size: 14px;
+      color: #999;
+      margin-top: 100px;
+    }
+
+    /* ================== AVATAR DROPDOWN ================== */
+    .avatar-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      object-fit: cover;
+      margin-right: 80px;
+      gap: 45;
+    }
+
+    .avatar-dropdown .dropdown-menu {
+      top: 50px;
+      right: 0;
+      width: 200px;
+    }
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* space between hamburger and avatar */
+}
+    /* ================== MODAL ================== */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 10000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.6);
+    }
+
+    .modal-content {
+      background-color: #fff;
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 8px;
+      width: 800px;
+      max-width: 90%;
+      text-align: center;
+      position: relative;
+    }
+
+    .modal-content h2 {
+      margin-top: 0;
+    }
+    header.main-header .logo img {
+    height: 100px;       /* adjust as needed */
+    width: auto;        /* keeps aspect ratio */
+    display: block;
+    margin-bottom: 25;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 0px; /* space between logo image and text */
+    text-decoration: none; /* remove underline */
+}
+
+.logo-container .logo-img {
+    height: 100px; /* adjust as needed */
+    width: auto;
+}
+
+.logo-container .logo-text {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 28px;
+    color: #3a86ff;
+    letter-spacing: 2px;
+    margin-right: 40px;
+}
+/* ===== Tips Modal ===== */
+.tips-modal .modal-content {
+  width: 700px;
+  max-width: 90%;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 25px;
+  color: #333;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.tips-modal .close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.tips-modal .loading {
+  text-align: center;
+  font-size: 16px;
+  color: #555;
+}
+
+.bell-icon {
+  width: 40px; /* Adjust size */
+  height: 40px; /* Adjust size */
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.bell-icon:hover {
+  transform: scale(1.1); /* Slightly enlarge the bell when hovered */
+}
+
+    .modal .close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    /* ====== Banderitas (Flag Garland) ====== */
+/* ===== Banderitas (Flag Garland) ===== */
+.banderitas {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 8px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  background-color: transparent;
+  z-index: 11000;
+  pointer-events: none;
+  padding-top: 10px;
+}
+
+header.main-header {
+  margin-top: 0px; /* pushes header down so flags sit above */
+}
+
+
+/* Flag styles */
+.flag {
+  width: 30px;
+  height: 40px;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  opacity: 0.95;
+  transform: none;
+  animation: none;
+}
+
+
+.flag.red { background-color: #ff4d4d; }
+.flag.yellow { background-color: #ffe066; }
+.flag.blue { background-color: #4d94ff; }
+.flag.green { background-color: #66cc66; }
+.flag.pink { background-color: #ff99cc; }
+.flag.orange { background-color: #ff9933; }
+.flag.purple { background-color: #9966ff; }
+.flag.teal { background-color: #33cccc; }
+.flag.lime { background-color: #ccff33; }
+
+@keyframes sway {
+  0%, 100% { transform: rotate(-4deg) translateY(0); }
+  50% { transform: rotate(4deg) translateY(3px); }
+}
+
+  </style>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@700;800&display=swap" rel="stylesheet" />
+  <!-- Font Awesome (for icons like bell, user, settings, etc.) -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      integrity="sha512-p8f8Q+L6gS6VG7QZy0HZ2x+UuIFDjJXbGROe5GbtgA6k1V3YdQZfDnRr7TkPRBslKJvUlpjLp+KUQqfzqf2KjA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer" />
+
+</head>
+
+<body class="{% block body_class %}{% endblock %}">
+  <!-- 🌈 Banderitas Decoration -->
+<div class="banderitas">
+  <div class="flag red"></div>
+  <div class="flag yellow"></div>
+  <div class="flag blue"></div>
+  <div class="flag green"></div>
+  <div class="flag pink"></div>
+  <div class="flag orange"></div>
+  <div class="flag purple"></div>
+  <div class="flag teal"></div>
+  <div class="flag lime"></div>
+   <div class="flag red"></div>
+  <div class="flag yellow"></div>
+  <div class="flag blue"></div>
+  <div class="flag green"></div>
+  <div class="flag pink"></div>
+  <div class="flag orange"></div>
+  <div class="flag purple"></div>
+  <div class="flag teal"></div>
+  <div class="flag lime"></div>
+   <div class="flag red"></div>
+  <div class="flag yellow"></div>
+  <div class="flag blue"></div>
+  <div class="flag green"></div>
+  <div class="flag pink"></div>
+  <div class="flag orange"></div>
+  <div class="flag purple"></div>
+  <div class="flag teal"></div>
+  <div class="flag lime"></div>
+</div>
+
+ <header class="main-header">
+ <a href="{% url 'home' %}" class="logo-container">
+  <img src="{% static 'images/logo.png' %}" alt="FindIt Logo" class="logo-img">
+  <span class="logo-text">FindIt</span>
+</a>
+
+
+  <nav id="main-nav">
+    <!-- Always visible links -->
+    <a href="/">Home</a>
+    <a href="{% url 'post_item' %}">Add</a>
+    <a href="{% url 'lost_item_report' %}">Lost Items</a>
+
+
+    <!-- Hamburger dropdown -->
+    <div class="dropdown-container">
+      <button id="dropdownToggle" aria-haspopup="true" aria-expanded="false">&#9776;</button>
+      <div class="dropdown-menu" id="dropdownMenu" role="menu" aria-labelledby="dropdownToggle">
+       <a href="#" id="openHowItWorksModal">How it Works</a>
+        <a href="{% url 'feedbacks' %}">Feedbacks</a>
+        <a href="{% url 'tips' %}" id="openTipsModal">Tips</a>
+
+       
+
+        <label>Appearance</label>
+        <div class="appearance-options">
+          <label><input type="radio" name="appearance" id="appearanceLight" value="light"> Light</label>
+          <label><input type="radio" name="appearance" id="appearanceDark" value="dark"> Dark</label>
+          <label><input type="radio" name="appearance" id="appearanceSystem" value="system"> System</label>
+        </div>
+      </div>
+    </div>
+
+
+
+
+  {% if user.is_authenticated %}
+<!-- ✅ Notification Bell -->
+<div class="notifications" id="notificationToggle">
+  <img src="{% static 'images/bell-icon.png' %}" alt="Notification Bell" class="bell-icon">
+  <span class="notification-count">3</span>
+  <div class="notification-list" id="notificationList">
+    <div class="notification-item">
+      <strong>Sara Jhonson</strong> mentioned you in a comment <small>2 min ago</small>
+    </div>
+    <div class="notification-item">
+      <strong>Nick Jonas</strong> created a new goal <small>30 min ago</small>
+    </div>
+    <div class="notification-item">
+      <strong>Matt Hardy</strong> requested to upgrade plan <small>1 hr ago</small>
+    </div>
+    <div class="notification-item">
+      <strong>Neity Miller</strong> uploaded a design file <small>30 min ago</small>
+    </div>
+  </div>
+</div>
+
+<div class="avatar-dropdown">
+  <img src="{% static 'images/' %}{{ user.profile.avatar }}" 
+       alt="User Avatar" class="avatar-img" id="avatarToggle">
+  <div class="dropdown-menu" id="avatarMenu">
+    <a href="#" id="changeAvatar"><i class="fa fa-user"></i> Profile</a>
+    <a href="{% url 'notifications' %}"><i class="fa fa-tags"></i> Notifications</a>
+    <a href="{% url 'privacy' %}"><i class="fa fa-lock"></i> Privacy</a>
+    <a href="{% url 'settings' %}"><i class="fa fa-cog"></i> Settings</a>
+    <a href="{% url 'logout' %}"><i class="fa fa-sign-out-alt"></i> Log out</a>
+  </div>
+</div>
+{% endif %}
+
+  </nav>
+</header>
+
+{% if messages %}
+  <div class="messages">
+    {% for message in messages %}
+      <div class="message">{{ message }}</div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<main class="{% block main_class %}{% endblock %}">
+  {% block content %}{% endblock %}
+</main>
+
+<footer>
+  <p>© 2025 FindIt. All rights reserved.</p>
+</footer>
+
+<!-- Avatar Modal -->
+<div id="avatarModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Select Your Avatar</h2>
+    <p>Choose one of the default avatars below:</p>
+
+   <div class="avatar-grid">
+  {% for i in "1234567890"|make_list %}
+    <img src="{% static 'images/avatar' %}{{ i }}.png" 
+         class="avatar-circle" 
+         alt="Avatar {{ i }}" 
+         data-avatar="{{ i }}">
+  {% endfor %}
+</div>
+<button id="uploadAvatarBtn" class="upload-btn">Upload Custom Avatar</button>
+
+
+</div>
+</div>
+<!-- Floating Tips Modal -->
+<div id="tipsModal" class="modal tips-modal">
+  <div class="modal-content" id="tipsContent">
+    <span class="close">&times;</span>
+    <div class="loading">Loading tips...
+
+    </div>
+  </div>
+  <!-- How It Works Modal -->
+<div id="howItWorksModal" class="modal">
+  <div class="modal-content" id="howItWorksContent">
+    <span class="close">&times;</span>
+    <!-- Content will be injected here via fetch -->
+  </div>
+</div>
+
+<style>
+.modal { display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); }
+.modal-content { background-color: #fff; margin: 10% auto; padding: 20px; border-radius: 8px; width: 80%; max-width: 600px; position: relative; }
+.modal-content .close { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; }
+</style>
+
+</div>
+
+
+   
+
+{% block scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  // ===== Helper Functions =====
+  const toggleDropdown = (toggleEl, menuEl) => {
+    if (!toggleEl || !menuEl) return;
+    toggleEl.addEventListener("click", e => {
+      e.stopPropagation();
+      menuEl.classList.toggle("show");
+    });
+    document.addEventListener("click", e => {
+      if (!menuEl.contains(e.target) && !toggleEl.contains(e.target)) {
+        menuEl.classList.remove("show");
+      }
+    });
+  };
+
+  const setupModal = (openBtn, modalEl, closeSelector = ".close") => {
+    if (!openBtn || !modalEl) return;
+    const closeBtn = modalEl.querySelector(closeSelector);
+    openBtn.addEventListener("click", e => {
+      e.preventDefault();
+      modalEl.style.display = "block";
+    });
+    if (closeBtn) closeBtn.addEventListener("click", () => modalEl.style.display = "none");
+    window.addEventListener("click", e => {
+      if (e.target === modalEl) modalEl.style.display = "none";
+    });
+  };
+  const notificationItems = document.querySelectorAll(".notification-item");
+
+notificationItems.forEach(item => {
+  item.addEventListener("click", () => {
+    const notificationId = item.dataset.notificationId;
+    
+    fetch("#", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": "{{ csrf_token }}"
+      },
+      body: JSON.stringify({ notification_id: notificationId })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        item.classList.add("read");
+      }
+    });
+  });
+});
+
+
+  const fetchModalContent = (openBtn, modalEl, contentEl, url) => {
+    if (!openBtn || !modalEl || !contentEl) return;
+    openBtn.addEventListener("click", e => {
+      e.preventDefault();
+      modalEl.style.display = "block";
+
+      const loadingEl = contentEl.querySelector(".loading");
+      if (loadingEl) loadingEl.style.display = "block";
+
+      fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          contentEl.innerHTML = '<span class="close">&times;</span>' + html;
+          const newClose = contentEl.querySelector(".close");
+          if (newClose) newClose.addEventListener("click", () => modalEl.style.display = "none");
+        })
+        .catch(() => {
+          contentEl.innerHTML = "<p>Failed to load content. Please try again.</p>";
+        });
+        fetch("{% url 'how_it_works' %}")
+  .then(res => res.text())
+  .then(html => {
+    howItWorksContent.innerHTML = '<span class="close">&times;</span>' + html;
+    const newClose = howItWorksContent.querySelector(".close");
+    if (newClose) newClose.addEventListener("click", () => howItWorksModal.style.display = "none");
+  });
+
+    });
+  };
+
+  // ===== Dropdowns =====
+  toggleDropdown(document.getElementById("dropdownToggle"), document.getElementById("dropdownMenu"));
+  toggleDropdown(document.getElementById("avatarToggle"), document.getElementById("avatarMenu"));
+
+
+  // === Notification Toggle ===
+const notifToggle = document.getElementById("notificationToggle");
+const notifList = document.getElementById("notificationList");
+if (notifToggle && notifList) {
+  notifToggle.addEventListener("click", e => {
+    e.stopPropagation();
+    notifList.classList.toggle("show");
+  });
+  document.addEventListener("click", e => {
+    if (!notifList.contains(e.target) && !notifToggle.contains(e.target)) {
+      notifList.classList.remove("show");
+    }
+  });
+}
+
+  // ===== Theme Handling =====
+  const body = document.body;
+  const radios = document.querySelectorAll('input[name="appearance"]');
+  const savedTheme = localStorage.getItem("theme");
+
+  if (savedTheme === "dark") body.classList.add("dark-mode");
+  else if (savedTheme === "light") body.classList.remove("dark-mode");
+  else if (window.matchMedia("(prefers-color-scheme: dark)").matches) body.classList.add("dark-mode");
+
+  radios.forEach(radio => {
+    radio.addEventListener("change", () => {
+      if (radio.value === "dark") {
+        body.classList.add("dark-mode");
+        localStorage.setItem("theme", "dark");
+      } else if (radio.value === "light") {
+        body.classList.remove("dark-mode");
+        localStorage.setItem("theme", "light");
+      } else {
+        localStorage.removeItem("theme");
+        body.classList.toggle("dark-mode", window.matchMedia("(prefers-color-scheme: dark)").matches);
+      }
+    });
+  });
+
+  // ===== Avatar Modal =====
+  setupModal(document.getElementById("changeAvatar"), document.getElementById("avatarModal"));
+
+  // ===== Tips Modal =====
+  fetchModalContent(
+    document.getElementById("openTipsModal"),
+    document.getElementById("tipsModal"),
+    document.getElementById("tipsContent"),
+    document.getElementById("openTipsModal")?.href
+  );
+
+  // ===== How It Works Modal =====
+  fetchModalContent(
+    document.getElementById("openHowItWorks"),
+    document.getElementById("howItWorksModal"),
+    document.getElementById("howItWorksContent"),
+    document.getElementById("openHowItWorks")?.href || "{% url 'how_it_works' %}"
+  );
+
+
+
+  // ===== Avatar Selection =====
+  const avatarGrid = document.querySelector(".avatar-grid");
+  const avatarImg = document.getElementById("avatarToggle");
+  if (avatarGrid && avatarImg) {
+    avatarGrid.addEventListener("click", e => {
+      const target = e.target;
+      if (target.tagName === "IMG" && target.dataset.avatar) {
+        const selectedAvatar = target.dataset.avatar;
+        const newAvatarPath = "{% static 'images/avatar' %}" + selectedAvatar + ".png";
+        avatarImg.src = newAvatarPath;
+
+        fetch("{% url 'update_avatar' %}", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token }}"
+          },
+          body: JSON.stringify({ avatar: selectedAvatar })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) console.log("Avatar updated!");
+        })
+        .catch(err => console.error("Avatar update failed:", err));
+
+        const avatarModal = document.getElementById("avatarModal");
+        if (avatarModal) avatarModal.style.display = "none";
+      }
+    });
+    
+  }
+
+});
+</script>
+
+
+{% endblock %}
+</body>
+</html>

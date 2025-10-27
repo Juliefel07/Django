@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block title %}Account Settings{% endblock %}
+{% block content %}
+
+   <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f6fa;
+            margin: 0;
+            padding: 0;
+            color: #2c3e50;
+        }
+
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #34495e;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button.btn-primary {
+            background-color: #2980b9;
+            color: #fff;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button.btn-primary:hover {
+            background-color: #1abc9c;
+        }
+
+        hr {
+            margin: 30px 0;
+            border: none;
+            border-top: 1px solid #bdc3c7;
+        }
+
+        a.internal-link {
+            color: #2980b9;
+            text-decoration: none;
+        }
+
+        a.internal-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+  <div class="container">
+        <h1>Account Settings</h1>
+        <p>Manage your account preferences below.</p>
+
+        <form method="post" action="{% url 'settings' %}">
+             {% csrf_token %}
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" name="username" id="username" value="">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" name="email" id="email" value="">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Change Password:</label>
+                <input type="password" name="password" id="password" placeholder="Enter new password">
+            </div>
+
+            <button type="submit" class="btn-primary">Save Changes</button>
+        </form>
+
+        <hr>
+
+        <p>Read our <a class="internal-link" href="/privacy/">Privacy Policy</a> for more information.</p>
+    </div>
+
+
+<!-- Include forms to update username, email, password, etc. -->
+{% endblock %}
