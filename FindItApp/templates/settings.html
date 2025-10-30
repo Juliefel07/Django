@@ -1,115 +1,159 @@
 {% extends 'base.html' %}
-{% block title %}Account Settings{% endblock %}
+{% load static %}
+
+{% block title %}Change Password{% endblock %}
+
 {% block content %}
+<div class="form-bg">
+  <div class="form-card">
 
-   <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f6fa;
-            margin: 0;
-            padding: 0;
-            color: #2c3e50;
-        }
-
-
-        .container {
-            max-width: 900px;
-            margin: 40px auto;
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        h1 {
-            color: #34495e;
-        }
-
-        p {
-            font-size: 16px;
-            line-height: 1.6;
-        }
-
-        form {
-            margin-top: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        input[type="text"], input[type="email"], input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #bdc3c7;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        button.btn-primary {
-            background-color: #2980b9;
-            color: #fff;
-            padding: 10px 25px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        button.btn-primary:hover {
-            background-color: #1abc9c;
-        }
-
-        hr {
-            margin: 30px 0;
-            border: none;
-            border-top: 1px solid #bdc3c7;
-        }
-
-        a.internal-link {
-            color: #2980b9;
-            text-decoration: none;
-        }
-
-        a.internal-link:hover {
-            text-decoration: underline;
-        }
-    </style>
-  <div class="container">
-        <h1>Account Settings</h1>
-        <p>Manage your account preferences below.</p>
-
-        <form method="post" action="{% url 'settings' %}">
-             {% csrf_token %}
-            <div class="form-group">
-                <label for="username">Username:</label>
-                <input type="text" name="username" id="username" value="">
-            </div>
-
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" name="email" id="email" value="">
-            </div>
-
-            <div class="form-group">
-                <label for="password">Change Password:</label>
-                <input type="password" name="password" id="password" placeholder="Enter new password">
-            </div>
-
-            <button type="submit" class="btn-primary">Save Changes</button>
-        </form>
-
-        <hr>
-
-        <p>Read our <a class="internal-link" href="/privacy/">Privacy Policy</a> for more information.</p>
+    <!-- Form Header -->
+    <div class="form-header">
+      <div>
+        <h1>Change</h1>
+        <h2>Password</h2>
+      </div>
+      <div class="form-logo">
+        <img src="{% static 'images/school_logo.png' %}" alt="Logo">
+      </div>
     </div>
 
+    <form method="post" id="passwordForm" action="{% url 'change_password' %}">
+      {% csrf_token %}
 
-<!-- Include forms to update username, email, password, etc. -->
+      <div class="section">
+        <div class="section-header">Account Security</div>
+
+        <!-- Current Password -->
+        <div class="row">
+          <label for="current_password">Current Password</label>
+          <input type="password" id="current_password" name="current_password" required>
+        </div>
+
+        <!-- New Password -->
+        <div class="row" style="position:relative;">
+          <label for="new_password">New Password</label>
+          <input type="password" id="new_password" name="new_password" required>
+          <span id="togglePassword" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); cursor:pointer;">👁️</span>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="row">
+          <label for="confirm_password">Confirm Password</label>
+          <input type="password" id="confirm_password" name="confirm_password" required>
+        </div>
+
+        <!-- Strength Meter -->
+        <div class="row">
+          <label>Password Strength:</label>
+          <div style="flex:2;">
+            <div style="width:100%; height:10px; background:#ccc; border-radius:5px;">
+              <div id="strengthBar" style="height:100%; width:0%; border-radius:5px;"></div>
+            </div>
+            <small id="strengthText" style="display:block; margin-top:3px; font-size:12px;">Very Weak</small>
+          </div>
+        </div>
+
+        <!-- Requirements -->
+        <div class="row">
+          <label>Requirements:</label>
+          <ul style="flex:2; padding-left: 20px; font-size:12px; margin:0;">
+            <li id="req-length">At least 12 characters</li>
+            <li id="req-upper">At least 1 uppercase letter</li>
+            <li id="req-lower">At least 1 lowercase letter</li>
+            <li id="req-alnum">At least 1 number</li>
+            <li id="req-maxlen">No more than 64 characters</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <button type="submit" class="submit-btn">Update Password</button>
+    </form>
+  </div>
+</div>
+
+<style>
+  body { background: #f0f4f8; font-family: 'Poppins', sans-serif; }
+
+  .form-bg { display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 30px; }
+  .form-card { background: #fff; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); padding: 40px; width: 100%; max-width: 500px; }
+  .form-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .form-header h1 { font-size: 32px; font-weight: 700; color: #1a1a1a; margin: 0; }
+  .form-header h2 { font-size: 22px; color: #555; margin-top: -4px; font-weight: 400; }
+  .form-logo img { width: 40px; height: 40px; object-fit: contain; }
+
+  .section { margin-top: 20px; }
+  .section-header { background-color: #2c3e50; color: white; font-weight: 600; font-size: 15px; padding: 6px 12px; border-radius: 6px; margin-bottom: 15px; }
+  
+  .row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+  .row label { flex: 1; text-align: left; font-size: 14px; font-weight: 500; color: #333; margin-right: 15px; }
+  .row input, .row select, .row textarea { flex: 2; border: 1px solid #ccc; border-radius: 10px; padding: 8px 10px; font-size: 14px; width: 100%; box-sizing: border-box; }
+  textarea { resize: none; }
+
+  .submit-btn { display: block; width: 100%; background-color: #2c3e50; color: white; border: none; border-radius: 10px; padding: 12px; font-size: 15px; font-weight: 500; margin-top: 20px; cursor: pointer; transition: background-color 0.3s; }
+  .submit-btn:hover { background-color: #02223f; }
+</style>
+
+<script>
+  // Toggle password visibility
+  const toggle = document.getElementById('togglePassword');
+  const passwordInput = document.getElementById('new_password');
+  toggle.addEventListener('click', () => {
+    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+  });
+  toggle.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle.click(); } });
+
+  // Password strength checker
+  function checkPasswordStrength(p) {
+    let score = 0;
+    if(p.length >= 12) score++;
+    if(/[A-Z]/.test(p)) score++;
+    if(/[a-z]/.test(p)) score++;
+    if(/\d/.test(p)) score++;
+    if(p.length <= 64) score++;
+    if(p.length > 0) score++; // Any input
+    return score;
+  }
+
+  const strengthBar = document.getElementById('strengthBar');
+  const strengthText = document.getElementById('strengthText');
+  const requirements = {
+    length: document.getElementById('req-length'),
+    upper: document.getElementById('req-upper'),
+    lower: document.getElementById('req-lower'),
+    alnum: document.getElementById('req-alnum'),
+    maxlen: document.getElementById('req-maxlen')
+  };
+
+  function updateStrength() {
+    const p = passwordInput.value;
+    const score = checkPasswordStrength(p);
+    strengthBar.style.width = (score/6*100) + '%';
+    if(score < 2){ strengthBar.style.backgroundColor='red'; strengthText.textContent='Very Weak'; }
+    else if(score < 4){ strengthBar.style.backgroundColor='orange'; strengthText.textContent='Weak'; }
+    else if(score < 6){ strengthBar.style.backgroundColor='yellowgreen'; strengthText.textContent='Good'; }
+    else{ strengthBar.style.backgroundColor='green'; strengthText.textContent='Strong'; }
+
+    requirements.length.style.color = p.length >= 12 ? 'green' : '#555';
+    requirements.upper.style.color = /[A-Z]/.test(p) ? 'green' : '#555';
+    requirements.lower.style.color = /[a-z]/.test(p) ? 'green' : '#555';
+    requirements.alnum.style.color = /\d/.test(p) ? 'green' : '#555';
+    requirements.maxlen.style.color = p.length <= 64 ? 'green' : '#555';
+  }
+
+  passwordInput.addEventListener('input', updateStrength);
+
+  // Confirm password validation
+  const form = document.getElementById('passwordForm');
+  const confirmInput = document.getElementById('confirm_password');
+  form.addEventListener('submit', e => {
+    if(passwordInput.value !== confirmInput.value) {
+      e.preventDefault();
+      alert("New password and confirm password do not match.");
+      confirmInput.focus();
+    }
+  });
+</script>
 {% endblock %}

@@ -9,65 +9,50 @@
   body.login-page {
     margin: 0;
     padding: 0;
-    background: #1B3C53;
+    background: #ffffff;
     height: 100%;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
 
   /* Wrapper for split screen */
-  .login-wrapper {
+.login-wrapper {
   display: flex;
-  align-items: flex-start; /* aligns children to the top */
-  justify-content: center; /* horizontally center, if needed */
-  min-height: 100vh; /* full viewport height */
-  padding-top: 20px;
-  
-  }
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 30px 20px;
+  text-align: center;
+  color: white;
+}
+
   .input-icon {
     padding-left: 40px; /* space for icon */
 }
-
-
-  /* Left side with illustration */
-/* --- LEFT: full-height illustration (Dribbble-style) --- */
-.illustration {
-  flex: 0 0 45%;                          /* fixed half-screen width */
-  min-height: 90vh;                      /* full viewport height */
-  background: url("{% static 'images/search.png' %}") no-repeat center/cover;
-  position: relative;
-  display: flex;
-  align-items: center;
-  padding: 80px;
-  overflow: hidden;
+/* Welcome message */
+.welcome-message {
+  margin-bottom: 40px;
+  animation: fadeIn 1s ease forwards;
 }
 
-/* overlay so the text is readable on top of the illustration */
-
-.illustration-content {
-  position: relative;
-  z-index: 2;
-  max-width: 420px;
-  text-align: left;                       /* left aligned like the ref */
-}
-/* --- Illustration text styling --- */
-
-
-.illustration h1 {
-  font-size: 40px;
-  font-weight: bold;
-  color: #000000; /* professional blue */
-  margin-left: 500px;
-  margin-bottom: 0px;
-  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+.welcome-message h1 {
+  font-size: 42px;
+  font-weight: 700;
+  color: #00ffff;
+  text-shadow: 0 0 20px rgba(0,255,255,0.6);
+  margin-bottom: 10px;
 }
 
-.illustration p {
-  font-size: 18px;
-  color: #5a6b8c; /* soft grayish-blue */
-  line-height: 1.6;
-  max-width: 420px;
-  font-family: 'Poppins', sans-serif;
+.welcome-message p {
+  font-size: 16px;
+  color: #ccefff;
+  max-width: 600px;
+  margin: 0 auto;
 }
+
+ 
+
+
 
 
 .illustration-logo {
@@ -99,24 +84,47 @@
 
   /* Right side login/signup card */
   /* Right side login/signup card with neon glow */
+/* Login/Signup card */
 .login-card {
-  flex: 1;
   background: #174143;
   border-radius: 20px;
   box-shadow: 0 0 25px rgba(37, 27, 222, 0.3),
               0 0 50px rgba(27, 17, 101, 0.2),
               inset 0 0 20px rgba(11, 3, 81, 0.15);
   padding: 40px 50px;
-  max-width: 500px;
-  display: flex;
-  margin-left: 50px;
-  flex-direction: column;
-  justify-content: center;
-  margin-right: 80px;
-  position: relative;
+  max-width: 450px;
+  width: 100%;
   border: 2px solid rgba(0, 217, 255, 0.7);
   animation: neonPulse 2.5s ease-in-out infinite alternate;
 }
+body.login-page {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  /* 🖼️ Add background image */
+  background: url("{% static 'images/bg-cover.png' %}") no-repeat center center fixed;
+  background-size: cover;
+
+  /* Optional: add a subtle overlay for readability */
+  position: relative;
+}
+
+body.login-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  
+}
+
+/* Make sure your login card is above the overlay */
+.login-wrapper,
+.login-card {
+  position: relative;
+  z-index: 1;
+}
+
 
 /* Neon pulse animation */
 @keyframes neonPulse {
@@ -215,6 +223,14 @@
     justify-content: center;
     gap: 16px;
   }
+/* Add gap between icons and placeholder/text in login form only */
+#login-form .input-email,
+#login-form .input-password {
+    padding-left: 60px; /* increase this number to create more gap */
+}
+
+/* Optional: adjust the icon position if needed */
+
 
   .social-icons a img {
     width: 32px;
@@ -307,7 +323,7 @@
 }
 
 .form-info .brand-name {
-  color: #00ffff;
+  color: #ffffff;
  
 }
 
@@ -355,19 +371,10 @@
   }
 </style>
 
-<div class="login-wrapper">
-<!-- Left panel illustration (Dribbble-style) -->
-<div class="illustration">
-  <div class="illustration-content">
-    <!-- optionally keep a small logo at top-left:
-    <img src="{% static 'images/logos.png' %}" alt="FindIt Logo" class="illustration-logo" /> -->
-    
-  </div>
-</div>
-
 
 
   <!-- Right panel: login/signup card -->
+   <div class="login-wrapper">
   <div class="login-card">
     {% if messages %}
       <ul class="messages">
@@ -384,9 +391,9 @@
 </div>
 <!-- ✨ Add this new content here -->
 <div class="form-info">
-  <h3>Join the <span class="brand-name">FindIt</span> Community</h3>
+  <h3>Join the <span class="brand-name">ᖴIᑎᗪ IT</span> Community</h3>
   <p class="form-description">
-    Create your account to report and recover lost items within the Aloguinsan–Balamban campus.
+    Create your account to report and recover lost items.
     Stay connected and help others find what they’ve lost!
   </p>
 </div>
@@ -474,6 +481,7 @@
 </div>
 
   </div>
+</div>
 </div>
 
 <script>

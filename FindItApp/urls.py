@@ -29,9 +29,18 @@ urlpatterns = [
     path('notifications/', views.notifications_view, name='notifications_view'),
     path('notifications/', views.notifications_view, name='notifications'),
     path('lost_item_report/', views.lost_items_dashboard, name='lost_items_dashboard'),
-
+    path('notifications/', views.notifications_view, name='notifications'),
+    path('mark_read/<int:pk>/', views.mark_read, name='mark_read'),
+    path('mark_unread/<int:pk>/', views.mark_unread, name='mark_unread'),
+    path('notifications/read/<int:id>/', views.mark_notification_read, name='mark_notification_read'),
     path('privacy/', views.privacy_view, name='privacy'),
     path('settings/', views.settings_view, name='settings'),
+    path('updates/', views.updates, name='updates'),
+    path('delete_notification/<int:pk>/', views.delete_notification, name='delete_notification'),
+    path('clear_notifications/', views.clear_notifications, name='clear_notifications'),
+    path('settings/change-password/', views.change_password_view, name='change_password'),
+    path('how-it-works/', views.how_it_works, name='how_it_works'),
+    path('notifications/mark-read/<int:id>/', views.mark_notification_read, name='mark_notification_read'),
 ]
 
 if settings.DEBUG:

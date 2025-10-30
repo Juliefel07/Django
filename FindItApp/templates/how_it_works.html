@@ -1,0 +1,230 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}How It Works | FindIt{% endblock %}
+{% block main_class %}how-it-works-page{% endblock %}
+
+{% block content %}
+<section class="how-section">
+  <div class="intro">
+    <h1>How FindIt Works</h1>
+    <p>
+      FindIt helps you reconnect with your lost belongings in just four simple steps —
+      from reporting a loss to safely claiming your item back.
+    </p>
+  </div>
+
+  <div class="steps-container">
+
+    <div class="how-step" data-delay="0">
+      <div class="step-icon">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </div>
+      <h2>Step 1: Report Lost Item</h2>
+      <p>Describe your lost item and where you last saw it. Include key details and contact info so others can reach you easily.</p>
+    </div>
+
+    <div class="how-step" data-delay="150">
+      <div class="step-icon">
+        <i class="fa-solid fa-box-open"></i>
+      </div>
+      <h2>Step 2: Report Found Item</h2>
+      <p>If you find something, upload what you found, when, and where. We’ll alert users who might have lost a similar item.</p>
+    </div>
+
+    <div class="how-step" data-delay="300">
+      <div class="step-icon">
+        <i class="fa-solid fa-bell"></i>
+      </div>
+      <h2>Step 3: Receive Notifications</h2>
+      <p>Once there’s a potential match between a lost and found report, both users get notified instantly.</p>
+    </div>
+
+    <div class="how-step" data-delay="450">
+      <div class="step-icon">
+        <i class="fa-solid fa-handshake"></i>
+      </div>
+      <h2>Step 4: Verify & Claim</h2>
+      <p>After verification, the owner can confirm and claim the found item safely through the system.</p>
+    </div>
+
+  </div>
+
+  <div class="cta-section">
+    <h3>Ready to get started?</h3>
+    <div class="cta-buttons">
+      <a href="{% url 'report_lost_item' %}" class="cta-btn primary">Report Lost Item</a>
+      <a href="{% url 'report_lost_item' %}" class="cta-btn secondary">Report Found Item</a>
+    </div>
+  </div>
+</section>
+
+<style>
+body.how-it-works-page {
+  background: linear-gradient(135deg, #f2f6fc 0%, #ffffff 100%);
+  color: #333;
+  font-family: 'Poppins', sans-serif;
+  overflow-x: hidden;
+}
+
+.how-section {
+  max-width: 1100px;
+  margin: 70px auto;
+  padding: 0 25px;
+}
+
+.intro {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.intro h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #007BFF, #00C6FF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 15px;
+}
+
+.intro p {
+  font-size: 1.1rem;
+  color: #555;
+  max-width: 750px;
+  margin: 0 auto;
+}
+
+.steps-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  margin-bottom: 60px;
+}
+
+.how-step {
+  background: #fff;
+  border-radius: 16px;
+  padding: 30px 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 0.7s ease;
+  position: relative;
+}
+
+.how-step.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.step-icon {
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(90deg, #007BFF, #00C6FF);
+  border-radius: 50%;
+  color: #fff;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 15px;
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+}
+
+.how-step h2 {
+  color: #007BFF;
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.how-step p {
+  color: #444;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.cta-section {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.cta-section h3 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #1d3557;
+  margin-bottom: 20px;
+}
+
+.cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.cta-btn {
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.cta-btn.primary {
+  background: linear-gradient(90deg, #007BFF, #00C6FF);
+  color: white;
+}
+
+.cta-btn.primary:hover {
+  background: linear-gradient(90deg, #0056b3, #0094d8);
+}
+
+.cta-btn.secondary {
+  background: linear-gradient(90deg, #06d6a0, #1dd3b0);
+  color: white;
+}
+
+.cta-btn.secondary:hover {
+  background: linear-gradient(90deg, #05b387, #17bfa1);
+}
+
+/* Fade-in animation delay handling */
+@media (prefers-reduced-motion: no-preference) {
+  .how-step {
+    will-change: transform, opacity;
+  }
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .intro h1 {
+    font-size: 2.3rem;
+  }
+  .how-step {
+    padding: 25px 15px;
+  }
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const steps = document.querySelectorAll(".how-step");
+
+  const revealSteps = () => {
+    const triggerBottom = window.innerHeight * 0.85;
+    steps.forEach(step => {
+      const top = step.getBoundingClientRect().top;
+      if (top < triggerBottom) {
+        step.classList.add("visible");
+      }
+    });
+  };
+
+  window.addEventListener("scroll", revealSteps);
+  revealSteps();
+});
+</script>
+
+{% endblock %}

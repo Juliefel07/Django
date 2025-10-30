@@ -59,6 +59,13 @@ body {
   display: flex;
   align-items: center;
 }
+.notification-item.unread {
+  background-color: #f4f4ff;
+  font-weight: 600;
+}
+.notification-item.read {
+  opacity: 0.8;
+}
 
 /* Optional: ensures button remains visible even on smaller screens */
 @media (max-width: 900px) {
@@ -285,7 +292,7 @@ body {
 
 .hero-section {
   position: relative;
-  background-image: url('{% static "images/image.png" %}');
+  background-image: url('{% static "images/image8.png" %}');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

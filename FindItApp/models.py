@@ -148,16 +148,17 @@ class Feedback(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, 
         on_delete=models.CASCADE, 
-        null=True,  # allow empty
+        null=True,
         blank=True
     )
-    name = models.CharField(max_length=100)  # new field for manual name
-    feedbacks = models.TextField()  # the content of the feedback
-    rating = models.IntegerField(default=0)  # rating out of 5 or any scale you prefer
-    created_at = models.DateTimeField(auto_now_add=True)  # automatically set when feedback is created
+    name = models.CharField(max_length=100)  # manual name
+    feedbacks = models.TextField()
+    rating = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user.username if self.user else 'Anonymous'} - {self.feedbacks[:30]}"
+        display_name = self.name or (self.user.username if self.user else "Anonymous")
+        return f"{display_name} - {self.feedbacks[:30]}"
 
 class Notification(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -167,3 +168,5 @@ class Notification(models.Model):
 
     def __str__(self):
         return self.message
+
+

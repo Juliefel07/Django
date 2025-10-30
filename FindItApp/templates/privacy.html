@@ -1,103 +1,207 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privacy Policy - FindIt</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f6fa;
-            margin: 0;
-            padding: 0;
-            color: #2c3e50;
-        }
+{% extends 'base.html' %}
+{% load static %}
 
-        a {
-            color: #2980b9;
-            text-decoration: none;
-        }
+{% block main_class %}privacy-page{% endblock %}
 
-        a:hover {
-            text-decoration: underline;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 40px auto;
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        h1, h2 {
-            color: #34495e;
-        }
-
-        p, li {
-            font-size: 16px;
-            line-height: 1.6;
-        }
-
-        ul {
-            padding-left: 20px;
-        }
-
-        nav {
-            background-color: #34495e;
-            padding: 15px 30px;
-        }
-
-        nav a {
-            color: #ecf0f1;
-            margin-right: 20px;
-            font-weight: 500;
-        }
-
-        nav a:hover {
-            color: #1abc9c;
-        }
-
-        hr {
-            margin: 30px 0;
-            border: none;
-            border-top: 1px solid #bdc3c7;
-        }
-    </style>
-</head>
-<body>
-    <nav>
-        <a href="/">Home</a>
-        <a href="/notifications/">Notifications</a>
-        <a href="/settings/">Settings</a>
-        <a href="/privacy/">Privacy</a>
-    </nav>
-
-    <div class="container">
+{% block content %}
+<div class="form-bg">
+  <div class="form-card privacy-card-container">
+    <div class="form-header">
+      <div>
         <h1>Privacy Policy</h1>
-        <p>At FindIt, we value your privacy and strive to protect your personal information.</p>
-
-        <h2>Information We Collect</h2>
-        <ul>
-            <li>Personal account information (e.g., email, username)</li>
-            <li>Activity on the platform such as searches and posts</li>
-            <li>Technical data like IP address and browser type</li>
-        </ul>
-
-        <h2>How We Use Your Information</h2>
-        <p>Your information is used for:</p>
-        <ul>
-            <li>Enhancing and maintaining our services</li>
-            <li>Sending important updates or notifications</li>
-            <li>Ensuring security and integrity of the platform</li>
-        </ul>
-
-        <h2>Data Sharing</h2>
-        <p>We do not sell your data. Trusted partners may receive limited information strictly for service operation.</p>
-
-        <h2>Your Rights</h2>
-        <p>You can review, update, or delete your personal data anytime via your <a href="/settings/">Account Settings</a>.</p>
+        <h2>How We Handle Your Data</h2>
+      </div>
+      
     </div>
-</body>
-</html>
+
+    <!-- Policy Cards -->
+    <div class="privacy-card">
+      <div class="card-accent"></div>
+      <div class="card-header">
+        <i class="fa-solid fa-user-shield"></i>
+        <h2>Information We Collect</h2>
+      </div>
+      <p>We may collect personal information such as your name, email, and profile details when you register or interact with our services. Non-personal data like device type, browser, and usage patterns is also collected to improve our services.</p>
+    </div>
+
+    <div class="privacy-card">
+      <div class="card-accent"></div>
+      <div class="card-header">
+        <i class="fa-solid fa-circle-info"></i>
+        <h2>How We Use Your Information</h2>
+      </div>
+      <ul>
+        <li>Provide and improve our services</li>
+        <li>Personalize your experience</li>
+        <li>Send updates, notifications, or promotions</li>
+      </ul>
+    </div>
+
+    <div class="privacy-card">
+      <div class="card-accent"></div>
+      <div class="card-header">
+        <i class="fa-solid fa-lock"></i>
+        <h2>Data Protection</h2>
+      </div>
+      <p>We implement industry-standard security measures to protect your data from unauthorized access or disclosure. Only authorized personnel have access under strict confidentiality.</p>
+    </div>
+
+    <div class="privacy-card">
+      <div class="card-accent"></div>
+      <div class="card-header">
+        <i class="fa-solid fa-share-nodes"></i>
+        <h2>Sharing Your Information</h2>
+      </div>
+      <p>We do not sell your personal information. We may share data with trusted third parties only when necessary for our services.</p>
+    </div>
+
+    <div class="privacy-card">
+      <div class="card-accent"></div>
+      <div class="card-header">
+        <i class="fa-solid fa-gavel"></i>
+        <h2>Your Rights</h2>
+      </div>
+      <p>You have the right to access, update, or delete your personal information. You can also manage your privacy preferences in your account settings.</p>
+    </div>
+
+    <div class="privacy-card">
+      <div class="card-accent"></div>
+      <div class="card-header">
+        <i class="fa-solid fa-calendar-check"></i>
+        <h2>Updates to This Policy</h2>
+      </div>
+      <p>We may update this policy from time to time. Significant updates will be communicated via email or notifications, and all changes will be posted here.</p>
+    </div>
+
+    <p class="footer-note">
+      Questions? <a href="{% url 'contact' %}">Contact us</a> for more information.
+    </p>
+  </div>
+</div>
+
+<style>
+body.privacy-page { 
+  background: #f0f4f8; 
+  font-family: 'Poppins', sans-serif; 
+}
+
+.form-card.privacy-card-container { 
+  max-width: 900px; 
+  margin: 60px auto; 
+  padding: 40px; 
+  border-radius: 20px; 
+}
+
+.form-header h1 { 
+  font-size: 2.8rem; 
+  margin-bottom: 5px; 
+  color: #2c3e50; 
+}
+.form-header h2 { 
+  font-size: 1.5rem; 
+  color: #555; 
+}
+
+.privacy-card { 
+  position: relative; 
+  background: #fff; 
+  border-radius: 15px; 
+  padding: 25px 30px 25px 50px; 
+  margin-bottom: 25px; 
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08); 
+  overflow: hidden; 
+  opacity: 0; 
+  transform: translateY(20px); 
+  transition: all 0.5s ease; 
+}
+
+.privacy-card.visible { 
+  opacity: 1; 
+  transform: translateY(0); 
+}
+
+.card-accent { 
+  position: absolute; 
+  left: 0; 
+  top: 0; 
+  width: 6px; 
+  height: 100%; 
+  background: linear-gradient(180deg, #007BFF, #00C6FF); 
+  border-radius: 10px 0 0 10px; 
+}
+
+.card-header { 
+  display: flex; 
+  align-items: center; 
+  margin-bottom: 15px; 
+}
+
+.card-header i { 
+  font-size: 1.5rem; 
+  color: #007BFF; 
+  margin-right: 12px; 
+  transition: transform 0.3s ease; 
+}
+
+.card-header h2 { 
+  font-size: 1.5rem; 
+  color: #2c3e50; 
+  margin: 0; 
+}
+
+.privacy-card:hover i { 
+  transform: rotate(-15deg); 
+}
+
+.privacy-card ul { 
+  padding-left: 20px; 
+  list-style-type: disc; 
+}
+
+.privacy-card ul li { 
+  margin-bottom: 8px; 
+}
+
+.footer-note { 
+  font-size: 1rem; 
+  color: #555; 
+  text-align: center; 
+  margin-top: 40px; 
+}
+
+.footer-note a { 
+  color: #007BFF; 
+  font-weight: 500; 
+  text-decoration: none; 
+}
+
+.footer-note a:hover { 
+  color: #00C6FF; 
+  text-decoration: underline; 
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .form-card.privacy-card-container { padding: 30px 20px; }
+  .form-header h1 { font-size: 2rem; }
+  .form-header h2 { font-size: 1.2rem; }
+  .privacy-card { padding: 20px 20px 20px 40px; }
+  .card-header h2 { font-size: 1.3rem; }
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const cards = document.querySelectorAll(".privacy-card");
+  const revealCards = () => {
+    const trigger = window.innerHeight * 0.85;
+    cards.forEach(card => {
+      const top = card.getBoundingClientRect().top;
+      if(top < trigger) card.classList.add("visible");
+    });
+  };
+  window.addEventListener("scroll", revealCards);
+  revealCards();
+});
+</script>
+{% endblock %}

@@ -1,56 +1,273 @@
-<!-- notifications.html -->
-{% extends 'base.html' %}
+{% load static %}
+{% csrf_token %}
 
-{% block title %}Notifications{% endblock %}
-{% block body_class %}notifications{% endblock %}
+<!-- ========== NOTIFICATION DROPDOWN ========== -->
+<div class="notifications" id="notificationToggle">
+  <img src="{% static 'images/image1.png' %}" alt="Notification Bell" class="bell-icon">
+  {% if unread_count > 0 %}
+    <span class="notification-count" id="notifCount">{{ unread_count }}</span>
+  {% endif %}
 
-{% block content %}
-<section class="notifications-section">
-    <h2>Your Notifications</h2>
+  <div class="notification-dropdown" id="notificationList">
+    <div class="dropdown-header">
+      <h4>Notifications</h4>
+      {% if notifications %}
+        <span class="clear-all" id="clearAll">Clear All</span>
+      {% endif %}
+    </div>
 
     {% if notifications %}
-        <ul>
-            {% for notification in notifications %}
-                <li class="notification-item {% if notification.is_read %}read{% else %}unread{% endif %}" 
-                    data-notification-id="{{ notification.id }}">
-                    <a href="{% url 'feedback_detail' notification.id %}">{{ notification.message }}</a>
-                    
-                    {% if not notification.is_read %}
-                        <!-- Mark as Read Link -->
-                        <a href="{% url 'mark_notification_read' id=notification.id %}" class="mark-read-link">Mark as Read</a>
-                    {% else %}
-                        <!-- If notification is read -->
-                        <span class="read-status">Read</span>
-                    {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
+      {% for n in notifications %}
+      <div class="notification-card {% if n.is_read %}read{% else %}unread{% endif %}" data-id="{{ n.id }}">
+        <div class="notif-content">
+          <p>{{ n.message }}</p>
+          <small>{{ n.created_at|date:"M d, Y - H:i" }}</small>
+        </div>
+
+        <div class="notif-actions">
+          <button class="action-btn">⋮</button>
+          <div class="action-menu">
+            {% if n.is_read %}
+              <div class="action-item mark-unread" data-url="{% url 'mark_unread' n.id %}">Mark as Unread</div>
+            {% else %}
+              <div class="action-item mark-read" data-url="{% url 'mark_read' n.id %}">Mark as Read</div>
+            {% endif %}
+            <div class="action-item delete" data-url="{% url 'delete_notification' n.id %}">Delete</div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
     {% else %}
-        <p>You have no notifications.</p>
+      <p class="no-notif">You're all caught up! 🎉</p>
     {% endif %}
-</section>
+  </div>
+</div>
 
+<!-- ========== STYLES ========== -->
 <style>
-.notification-item {
-    padding: 15px;
-    background: white;
-    border: 1px solid #ddd;
-    margin-bottom: 10px;
-    border-radius: 8px;
+.notifications {
+  position: relative;
+  display: inline-block;
 }
 
-.notification-item a {
-    text-decoration: none;
-    color: #333;
+.bell-icon {
+  width: 45px;
+  height: 45px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  filter: brightness(0) invert(1);
+}
+.bell-icon:hover { transform: scale(1.1); }
+
+.notification-count {
+  position: absolute;
+  top: 0;
+  right: 2px;
+  background: rgb(254, 42, 4);
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 50%;
+  padding: 2px 6px;
 }
 
-.notification-item a:hover {
-    font-weight: bold;
+.notification-dropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 55px;
+  width: 340px;
+  max-height: 420px;
+  overflow-y: auto;
+  background-color: #ffffff;
+  color: #000000;
+  border-radius: 10px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-in-out;
 }
+.notification-dropdown.show { display: block; }
 
-.read-status {
-    color: green;
-    font-weight: bold;
+.dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  border-bottom: 1px solid #333;
+  font-size: 16px;
+}
+.dropdown-header h4 { margin: 0; font-size: 18px; }
+.dropdown-header .clear-all { color: #000; cursor: pointer; font-size: 14px; }
+
+.notification-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 12px 15px;
+  border-bottom: 1px solid #fff;
+  position: relative;
+  transition: background 0.2s;
+}
+.notification-card:hover { background: #393E46; }
+.notification-card.unread { background: #0C2B4E; }
+.notification-card.read { background: #fff; }
+.notification-card.read .notif-content p { color: #000; }
+.notification-card.read small { color: #555; }
+
+.notif-content { flex-grow: 1; padding-right: 10px; }
+.notif-content p { margin: 0; font-size: 14px; color: #f8f8f8; }
+.notif-content small { color: #aaa; font-size: 12px; }
+
+.notif-actions { position: relative; }
+.action-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 5px;
+}
+.action-btn:hover { color: #fff; }
+
+.notification-card.flipped .action-menu { top: auto; bottom: 25px; }
+
+.action-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 25px;
+  background: #393E46;
+  border: 1px solid #444;
+  border-radius: 6px;
+  overflow: hidden;
+  min-width: 140px;
+  z-index: 1010;
+}
+.action-menu.show { display: block; }
+
+.action-item {
+  padding: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #eee;
+  border-bottom: 1px solid #444;
+}
+.action-item:last-child { border-bottom: none; }
+.action-item:hover { background: #fff9f9; color: #000; }
+
+.no-notif { text-align: center; padding: 20px; color: #ccc; }
+
+.notification-dropdown::-webkit-scrollbar { width: 6px; }
+.notification-dropdown::-webkit-scrollbar-thumb { background-color: #555; border-radius: 10px; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 </style>
-{% endblock %}
+
+<!-- ========== SCRIPT ========== -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const bell = document.getElementById("notificationToggle");
+  const list = document.getElementById("notificationList");
+  const clearAll = document.getElementById("clearAll");
+  const countBadge = document.getElementById("notifCount");
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie) {
+      document.cookie.split(';').forEach(cookie => {
+        cookie = cookie.trim();
+        if (cookie.startsWith(name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        }
+      });
+    }
+    return cookieValue;
+  }
+
+  function updateCount(change) {
+    if (!countBadge) return;
+    let current = parseInt(countBadge.textContent) || 0;
+    current += change;
+    if (current <= 0) countBadge.remove();
+    else countBadge.textContent = current;
+  }
+
+  bell.addEventListener("click", e => {
+    e.stopPropagation();
+    list.classList.toggle("show");
+  });
+
+  document.addEventListener("click", e => {
+    if (!bell.contains(e.target)) {
+      list.classList.remove("show");
+      document.querySelectorAll(".action-menu").forEach(m => m.classList.remove("show"));
+    }
+  });
+
+  document.querySelectorAll(".action-btn").forEach(btn => {
+    btn.addEventListener("click", e => {
+      e.stopPropagation();
+      const menu = btn.nextElementSibling;
+      document.querySelectorAll(".action-menu").forEach(m => { if (m !== menu) m.classList.remove("show"); });
+      const rect = menu.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - rect.top - menu.offsetHeight;
+      if (spaceBelow < 0) { menu.style.top = "auto"; menu.style.bottom = "25px"; }
+      else { menu.style.bottom = "auto"; menu.style.top = "25px"; }
+      menu.classList.toggle("show");
+    });
+  });
+
+  document.querySelectorAll(".action-item.delete").forEach(btn => {
+    btn.addEventListener("click", e => {
+      e.stopPropagation();
+      const notif = btn.closest(".notification-card");
+      const notifId = notif.dataset.id;
+      fetch(`/delete_notification/${notifId}/`, {
+        method: "POST",
+        headers: { "X-CSRFToken": getCookie("csrftoken"), "Content-Type": "application/json" }
+      }).then(res => res.json())
+        .then(data => { if (data.status === "success") { notif.remove(); updateCount(-1); } });
+    });
+  });
+
+  document.querySelectorAll(".action-item.mark-read").forEach(btn => {
+    btn.addEventListener("click", e => {
+      e.stopPropagation();
+      const notif = btn.closest(".notification-card");
+      fetch(btn.dataset.url, { method: "POST", headers: { "X-CSRFToken": getCookie("csrftoken") } })
+        .then(res => res.json())
+        .then(data => { if (data.status === "success") { notif.classList.replace("unread","read"); updateCount(-1); } });
+    });
+  });
+
+  document.querySelectorAll(".action-item.mark-unread").forEach(btn => {
+    btn.addEventListener("click", e => {
+      e.stopPropagation();
+      const notif = btn.closest(".notification-card");
+      fetch(btn.dataset.url, { method: "POST", headers: { "X-CSRFToken": getCookie("csrftoken") } })
+        .then(res => res.json())
+        .then(data => { if (data.status === "success") { notif.classList.replace("read","unread"); updateCount(1); } });
+    });
+  });
+
+  if (clearAll) {
+    clearAll.addEventListener("click", e => {
+      e.stopPropagation();
+      fetch("/clear_notifications/", { method: "POST", headers: { "X-CSRFToken": getCookie("csrftoken"), "Content-Type": "application/json" } })
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === "success") {
+            document.querySelectorAll(".notification-card").forEach(c => c.remove());
+            if (countBadge) countBadge.remove();
+            clearAll.style.display = "none";
+            list.innerHTML += '<p class="no-notif">You\'re all caught up! 🎉</p>';
+          }
+        });
+    });
+  }
+
+});
+</script>

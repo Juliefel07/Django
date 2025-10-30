@@ -77,7 +77,7 @@
     }
 
     header.main-header {
-      background: rgba(255, 255, 255, 0.9);
+      background: #9899eb;
       padding: 18px 40px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
       display: flex;
@@ -96,7 +96,7 @@
 }
 
 .notification-count {
-  background-color: #f00;
+  background-color: rgb(255, 0, 0);
   color: #fff;
   border-radius: 50%;
   padding: 2px 6px;
@@ -152,14 +152,11 @@
       font-family: 'Inter', sans-serif;
     }
 
-    nav a:hover {
-      color: #fafafa;
-      background-color: #689563;
-    }
+  
 
     nav a.auth-link {
       background-color: #2a72ed;
-      color: white;
+      color: rgb(251, 4, 4);
       font-weight: 700;
       padding: 10px 18px;
       border-radius: 8px;
@@ -181,10 +178,10 @@
       cursor: pointer;
       font-size: 24px;
       padding: 0 10px;
-      color: #a19c9c;
+      color: #000000;
       position: relative;
       z-index: 2000;
-      margin-right: 100;
+      margin-right: 30px;
     }
 
     .dropdown-container {
@@ -211,6 +208,14 @@
     .dropdown-menu.show {
       display: flex;
     }
+.notification-item { position: relative; padding: 10px; border-bottom: 1px solid #ddd; }
+.notification-item.read { background-color: #f9f9f9; }
+.notification-actions { position: absolute; top: 10px; right: 10px; }
+.dots-btn { background: none; border: none; cursor: pointer; font-size: 18px; }
+.dots-menu { display: none; position: absolute; right: 0; top: 20px; background: #fff; border: 1px solid #ccc; border-radius: 5px; z-index: 10; }
+.dots-menu a { display: block; padding: 5px 10px; color: #333; text-decoration: none; }
+.dots-menu a:hover { background-color: #f0f0f0; }
+.dots-menu.show { display: block; }
 
     .dropdown-menu a,
     .dropdown-menu label {
@@ -245,7 +250,9 @@
       background-color: #1e1e1e;
       color: #f5f5f5;
     }
-
+.dropdown-menu a:hover {
+  background-color: #f0f0f0;
+}
     body.dark-mode header.main-header {
       background: rgba(30, 30, 30, 0.9);
       box-shadow: 0 2px 8px rgba(255, 255, 255, 0.05);
@@ -264,7 +271,7 @@
       color: #fff;
     }
 
-    body.dark-mode nav a.auth-link {
+    body.dark-mode -link {
       background-color: #3a86ff;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     }
@@ -287,6 +294,7 @@
     body.dark-mode footer {
       color: #bbb;
     }
+    
 
     body.dark-mode .message,
     body.dark-mode .card,
@@ -347,9 +355,22 @@
       border-radius: 50%;
       cursor: pointer;
       object-fit: cover;
-      margin-right: 80px;
+      margin-right: 10px;
       gap: 45;
     }
+.menu-icon {
+  width: 28px;    /* adjust as needed */
+  height: 28px;
+  object-fit: contain;
+  cursor: pointer;
+  color:white;
+  filter: invert(100%);
+
+}
+
+#dropdownToggle:hover .menu-icon {
+  transform: scale(1.1); /* slightly enlarge on hover */
+}
 
     .avatar-dropdown .dropdown-menu {
       top: 50px;
@@ -394,6 +415,33 @@
     display: block;
     margin-bottom: 25;
 }
+/* Default shared styles */
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+/* Logged-in user */
+.main-header.logged-in {
+  background-color: #758A93;
+  color: white;
+}
+
+.main-header.logged-in .nav-icon img {
+  filter: brightness(0) invert(1); /* make icons white */
+}
+
+/* Logged-out user */
+.main-header.logged-out {
+  background-color: #758A93;
+  color: #333;
+}
+
+.main-header.logged-out .nav-icon img {
+  filter: none; /* keep icons original color */
+}
 
 .logo-container {
     display: flex;
@@ -408,13 +456,44 @@
 }
 
 .logo-container .logo-text {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 800;
-    font-size: 28px;
-    color: #3a86ff;
+    font-family: 'Roboto', sans-serif; /* new font */
+    font-weight: 900;                 /* heavier weight */
+    font-size: 28px;                  
+    color: #fbfbfb;
     letter-spacing: 2px;
     margin-right: 40px;
 }
+
+/* Container for nav icons */
+#main-nav {
+  display: flex;
+  align-items: center;
+  gap: 40px; /* adjust this for spacing between icons */
+  margin-right: 50px;
+  margin-bottom: 7px;
+}
+
+/* Each icon link */
+.nav-icon {
+  display: inline-block;
+  width: 28px;  /* icon size */
+  height: 28px;
+  cursor: pointer;
+  
+  
+}
+
+/* The image inside the link */
+.nav-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Hover effect */
+
+
 /* ===== Tips Modal ===== */
 .tips-modal .modal-content {
   width: 700px;
@@ -426,7 +505,43 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   position: relative;
 }
+.notification-item {
+  position: relative;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
 
+.dropdown {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  min-width: 120px;
+  z-index: 1000;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 5px 10px;
+  text-decoration: none;
+  color: black;
+}
+
+.dropdown-menu a:hover {
+  background-color: #f0f0f0;
+}
+
+.dropdown-menu.show {
+  display: block;
+}
 .tips-modal .close {
   position: absolute;
   top: 10px;
@@ -443,10 +558,11 @@
 }
 
 .bell-icon {
-  width: 40px; /* Adjust size */
-  height: 40px; /* Adjust size */
+  width: 55px; /* Adjust size */
+  height: 55px; /* Adjust size */
   cursor: pointer;
   transition: transform 0.3s ease;
+  filter: brightness(0) invert(1);
 }
 
 .bell-icon:hover {
@@ -478,9 +594,26 @@
   pointer-events: none;
   padding-top: 10px;
 }
-
+#main-nav {
+  display: blockflex;
+  margin-right: 50px; /* or something similar */
+  overflow: hidden; 
+  margin-bottom: 7px;/* can cut off links if nav is too narrow */
+}
 header.main-header {
   margin-top: 0px; /* pushes header down so flags sit above */
+}
+.dropdown-container {
+  position: relative;
+  margin-right: 50px;
+  margin-left: 30px;
+}
+
+.dropdown-container button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
 }
 
 
@@ -513,126 +646,79 @@ header.main-header {
   </style>
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@700;800&display=swap" rel="stylesheet" />
-  <!-- Font Awesome (for icons like bell, user, settings, etc.) -->
 <link rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
       integrity="sha512-p8f8Q+L6gS6VG7QZy0HZ2x+UuIFDjJXbGROe5GbtgA6k1V3YdQZfDnRr7TkPRBslKJvUlpjLp+KUQqfzqf2KjA=="
       crossorigin="anonymous"
       referrerpolicy="no-referrer" />
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
 
 </head>
-
 <body class="{% block body_class %}{% endblock %}">
-  <!-- 🌈 Banderitas Decoration -->
-<div class="banderitas">
-  <div class="flag red"></div>
-  <div class="flag yellow"></div>
-  <div class="flag blue"></div>
-  <div class="flag green"></div>
-  <div class="flag pink"></div>
-  <div class="flag orange"></div>
-  <div class="flag purple"></div>
-  <div class="flag teal"></div>
-  <div class="flag lime"></div>
-   <div class="flag red"></div>
-  <div class="flag yellow"></div>
-  <div class="flag blue"></div>
-  <div class="flag green"></div>
-  <div class="flag pink"></div>
-  <div class="flag orange"></div>
-  <div class="flag purple"></div>
-  <div class="flag teal"></div>
-  <div class="flag lime"></div>
-   <div class="flag red"></div>
-  <div class="flag yellow"></div>
-  <div class="flag blue"></div>
-  <div class="flag green"></div>
-  <div class="flag pink"></div>
-  <div class="flag orange"></div>
-  <div class="flag purple"></div>
-  <div class="flag teal"></div>
-  <div class="flag lime"></div>
-</div>
 
- <header class="main-header">
- <a href="{% url 'home' %}" class="logo-container">
-  <img src="{% static 'images/logo.png' %}" alt="FindIt Logo" class="logo-img">
-  <span class="logo-text">FindIt</span>
-</a>
-
+<header class="main-header {% if user.is_authenticated %}logged-in{% else %}logged-out{% endif %}">
+  <a href="{% url 'home' %}" class="logo-container">
+    <img src="{% static 'images/logo.png' %}" alt="FindIt Logo" class="logo-img">
+    <span class="logo-text">ᖴIᑎᗪ IT</span>
+  </a>
 
   <nav id="main-nav">
-    <!-- Always visible links -->
-    <a href="/">Home</a>
-    <a href="{% url 'post_item' %}">Add</a>
-    <a href="{% url 'lost_item_report' %}">Lost Items</a>
+    <a href="/" class="nav-icon" title="Home">
+      <img src="{% static 'images/homee.png' %}" alt="Home">
+    </a>
 
+    <a href="{% url 'post_item' %}" class="nav-icon" title="Add">
+      <img src="{% static 'images/addform.png' %}" alt="Add">
+    </a>
 
-    <!-- Hamburger dropdown -->
-    <div class="dropdown-container">
-      <button id="dropdownToggle" aria-haspopup="true" aria-expanded="false">&#9776;</button>
-      <div class="dropdown-menu" id="dropdownMenu" role="menu" aria-labelledby="dropdownToggle">
-       <a href="#" id="openHowItWorksModal">How it Works</a>
-        <a href="{% url 'feedbacks' %}">Feedbacks</a>
-        <a href="{% url 'tips' %}" id="openTipsModal">Tips</a>
-
-       
-
-        <label>Appearance</label>
-        <div class="appearance-options">
-          <label><input type="radio" name="appearance" id="appearanceLight" value="light"> Light</label>
-          <label><input type="radio" name="appearance" id="appearanceDark" value="dark"> Dark</label>
-          <label><input type="radio" name="appearance" id="appearanceSystem" value="system"> System</label>
-        </div>
-      </div>
-    </div>
-
-
-
+    <a href="{% url 'lost_item_report' %}" class="nav-icon" title="Lost Items">
+      <img src="{% static 'images/lost.png' %}" alt="Lost Items">
+    </a>
+  </nav>
 
   {% if user.is_authenticated %}
-<!-- ✅ Notification Bell -->
-<div class="notifications" id="notificationToggle">
-  <img src="{% static 'images/bell-icon.png' %}" alt="Notification Bell" class="bell-icon">
-  <span class="notification-count">3</span>
-  <div class="notification-list" id="notificationList">
-    <div class="notification-item">
-      <strong>Sara Jhonson</strong> mentioned you in a comment <small>2 min ago</small>
-    </div>
-    <div class="notification-item">
-      <strong>Nick Jonas</strong> created a new goal <small>30 min ago</small>
-    </div>
-    <div class="notification-item">
-      <strong>Matt Hardy</strong> requested to upgrade plan <small>1 hr ago</small>
-    </div>
-    <div class="notification-item">
-      <strong>Neity Miller</strong> uploaded a design file <small>30 min ago</small>
+  
+  {% include 'notifications.html' %}
+  <!-- Avatar Dropdown -->
+  <div class="avatar-dropdown">
+    <img src="{% static 'images/' %}{{ user.profile.avatar }}" alt="User Avatar" class="avatar-img" id="avatarToggle">
+    <div class="dropdown-menu" id="avatarMenu">
+      <a href="#" id="changeAvatar"><i class="fa fa-user"></i> Profile</a>
+      <a href="{% url 'privacy' %}"><i class="fa fa-lock"></i> Privacy</a>
+      <a href="{% url 'settings' %}"><i class="fa fa-cog"></i> Settings</a>
     </div>
   </div>
-</div>
 
-<div class="avatar-dropdown">
-  <img src="{% static 'images/' %}{{ user.profile.avatar }}" 
-       alt="User Avatar" class="avatar-img" id="avatarToggle">
-  <div class="dropdown-menu" id="avatarMenu">
-    <a href="#" id="changeAvatar"><i class="fa fa-user"></i> Profile</a>
-    <a href="{% url 'notifications' %}"><i class="fa fa-tags"></i> Notifications</a>
-    <a href="{% url 'privacy' %}"><i class="fa fa-lock"></i> Privacy</a>
-    <a href="{% url 'settings' %}"><i class="fa fa-cog"></i> Settings</a>
-    <a href="{% url 'logout' %}"><i class="fa fa-sign-out-alt"></i> Log out</a>
+
+  <div class="dropdown-container">
+    <button id="dropdownToggle" aria-haspopup="true" aria-expanded="false">
+      <img src="{% static 'images/image2.png' %}" alt="Menu" class="menu-icon">
+    </button>
+
+    <div class="dropdown-menu" id="dropdownMenu" role="menu" aria-labelledby="dropdownToggle">
+      <a href="{% url 'how_it_works' %}">How it Works</a>
+      <a href="{% url 'feedbacks' %}">Feedbacks</a>
+      <a href="{% url 'tips' %}" id="openTipsModal">Tips</a>
+      
+      <label>Appearance</label>
+      <div class="appearance-options">
+        <label><input type="radio" name="appearance" value="light"> Light</label>
+        <label><input type="radio" name="appearance" value="dark"> Dark</label>
+        <label><input type="radio" name="appearance" value="system"> System</label>
+      </div>
+
+      <a href="{% url 'logout' %}"><i class="fa fa-sign-out-alt"></i> Log out</a>
+    </div>
   </div>
-</div>
-{% endif %}
-
-  </nav>
+  {% endif %}
 </header>
 
 {% if messages %}
-  <div class="messages">
-    {% for message in messages %}
-      <div class="message">{{ message }}</div>
-    {% endfor %}
-  </div>
+<div class="messages">
+  {% for message in messages %}
+  <div class="message">{{ message }}</div>
+  {% endfor %}
+</div>
 {% endif %}
 
 <main class="{% block main_class %}{% endblock %}">
@@ -643,58 +729,67 @@ header.main-header {
   <p>© 2025 FindIt. All rights reserved.</p>
 </footer>
 
-<!-- Avatar Modal -->
+<!-- Modals -->
 <div id="avatarModal" class="modal">
   <div class="modal-content">
     <span class="close">&times;</span>
     <h2>Select Your Avatar</h2>
-    <p>Choose one of the default avatars below:</p>
-
-   <div class="avatar-grid">
-  {% for i in "1234567890"|make_list %}
-    <img src="{% static 'images/avatar' %}{{ i }}.png" 
-         class="avatar-circle" 
-         alt="Avatar {{ i }}" 
-         data-avatar="{{ i }}">
-  {% endfor %}
+    <div class="avatar-grid">
+      {% for i in "1234567890"|make_list %}
+      <img src="{% static 'images/avatar' %}{{ i }}.png" class="avatar-circle" alt="Avatar {{ i }}" data-avatar="{{ i }}">
+      {% endfor %}
+    </div>
+    <button id="uploadAvatarBtn" class="upload-btn">Upload Custom Avatar</button>
+  </div>
 </div>
-<button id="uploadAvatarBtn" class="upload-btn">Upload Custom Avatar</button>
 
-
-</div>
-</div>
-<!-- Floating Tips Modal -->
 <div id="tipsModal" class="modal tips-modal">
   <div class="modal-content" id="tipsContent">
     <span class="close">&times;</span>
-    <div class="loading">Loading tips...
-
-    </div>
+    <div class="loading">Loading tips...</div>
   </div>
-  <!-- How It Works Modal -->
+</div>
+
 <div id="howItWorksModal" class="modal">
   <div class="modal-content" id="howItWorksContent">
     <span class="close">&times;</span>
-    <!-- Content will be injected here via fetch -->
   </div>
 </div>
 
 <style>
-.modal { display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); }
-.modal-content { background-color: #fff; margin: 10% auto; padding: 20px; border-radius: 8px; width: 80%; max-width: 600px; position: relative; }
-.modal-content .close { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; }
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
+}
+.modal-content {
+  background-color: #fff;
+  margin: 10% auto;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 600px;
+  position: relative;
+}
+.modal-content .close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  cursor: pointer;
+}
 </style>
-
-</div>
-
-
-   
 
 {% block scripts %}
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-
-  // ===== Helper Functions =====
+  // ===== Dropdown Toggles =====
   const toggleDropdown = (toggleEl, menuEl) => {
     if (!toggleEl || !menuEl) return;
     toggleEl.addEventListener("click", e => {
@@ -707,174 +802,110 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   };
-
-  const setupModal = (openBtn, modalEl, closeSelector = ".close") => {
-    if (!openBtn || !modalEl) return;
-    const closeBtn = modalEl.querySelector(closeSelector);
-    openBtn.addEventListener("click", e => {
-      e.preventDefault();
-      modalEl.style.display = "block";
-    });
-    if (closeBtn) closeBtn.addEventListener("click", () => modalEl.style.display = "none");
-    window.addEventListener("click", e => {
-      if (e.target === modalEl) modalEl.style.display = "none";
-    });
-  };
-  const notificationItems = document.querySelectorAll(".notification-item");
-
-notificationItems.forEach(item => {
-  item.addEventListener("click", () => {
-    const notificationId = item.dataset.notificationId;
-    
-    fetch("#", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": "{{ csrf_token }}"
-      },
-      body: JSON.stringify({ notification_id: notificationId })
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        item.classList.add("read");
-      }
-    });
-  });
-});
-
-
-  const fetchModalContent = (openBtn, modalEl, contentEl, url) => {
-    if (!openBtn || !modalEl || !contentEl) return;
-    openBtn.addEventListener("click", e => {
-      e.preventDefault();
-      modalEl.style.display = "block";
-
-      const loadingEl = contentEl.querySelector(".loading");
-      if (loadingEl) loadingEl.style.display = "block";
-
-      fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          contentEl.innerHTML = '<span class="close">&times;</span>' + html;
-          const newClose = contentEl.querySelector(".close");
-          if (newClose) newClose.addEventListener("click", () => modalEl.style.display = "none");
-        })
-        .catch(() => {
-          contentEl.innerHTML = "<p>Failed to load content. Please try again.</p>";
-        });
-        fetch("{% url 'how_it_works' %}")
-  .then(res => res.text())
-  .then(html => {
-    howItWorksContent.innerHTML = '<span class="close">&times;</span>' + html;
-    const newClose = howItWorksContent.querySelector(".close");
-    if (newClose) newClose.addEventListener("click", () => howItWorksModal.style.display = "none");
-  });
-
-    });
-  };
-
-  // ===== Dropdowns =====
+  
   toggleDropdown(document.getElementById("dropdownToggle"), document.getElementById("dropdownMenu"));
   toggleDropdown(document.getElementById("avatarToggle"), document.getElementById("avatarMenu"));
 
-
-  // === Notification Toggle ===
-const notifToggle = document.getElementById("notificationToggle");
+  // ===== Notifications =====
+  const bellIcon = document.querySelector(".bell-icon");
 const notifList = document.getElementById("notificationList");
-if (notifToggle && notifList) {
-  notifToggle.addEventListener("click", e => {
+
+if (bellIcon && notifList) {
+  // Toggle dropdown when clicking the bell
+  bellIcon.addEventListener("click", e => {
     e.stopPropagation();
     notifList.classList.toggle("show");
   });
+
+  // Close dropdown when clicking outside
   document.addEventListener("click", e => {
-    if (!notifList.contains(e.target) && !notifToggle.contains(e.target)) {
+    if (!notifList.contains(e.target) && !bellIcon.contains(e.target)) {
       notifList.classList.remove("show");
     }
   });
 }
 
+  // ====== Tips Modal Loader ======
+  const tipsModal = document.getElementById("tipsModal");
+  const tipsContent = document.getElementById("tipsContent");
+  const openTipsModal = document.getElementById("openTipsModal");
+  if (openTipsModal && tipsModal) {
+    openTipsModal.addEventListener("click", e => {
+      e.preventDefault();
+      tipsModal.style.display = "block";
+      tipsContent.innerHTML = '<span class="close">&times;</span><div class="loading">Loading tips...</div>';
+      fetch("{% url 'tips' %}")
+        .then(res => res.text())
+        .then(data => {
+          tipsContent.innerHTML = '<span class="close">&times;</span>' + data;
+        })
+        .catch(() => {
+          tipsContent.innerHTML = '<span class="close">&times;</span><p>Failed to load tips.</p>';
+        });
+    });
+  }
+
+  // ===== Generic Modal Setup =====
+  const setupModal = (openBtn, modalEl) => {
+    if (!openBtn || !modalEl) return;
+    const closeBtn = modalEl.querySelector(".close");
+    openBtn.addEventListener("click", e => { e.preventDefault(); modalEl.style.display="block"; });
+    closeBtn?.addEventListener("click", () => modalEl.style.display="none");
+    window.addEventListener("click", e => { if(e.target === modalEl) modalEl.style.display="none"; });
+  };
+  setupModal(document.getElementById("changeAvatar"), document.getElementById("avatarModal"));
+  setupModal(document.getElementById("openHowItWorksModal"), document.getElementById("howItWorksModal"));
+
   // ===== Theme Handling =====
   const body = document.body;
   const radios = document.querySelectorAll('input[name="appearance"]');
   const savedTheme = localStorage.getItem("theme");
+  if(savedTheme==="dark") body.classList.add("dark-mode");
+  else if(savedTheme==="light") body.classList.remove("dark-mode");
+  else if(window.matchMedia("(prefers-color-scheme: dark)").matches) body.classList.add("dark-mode");
 
-  if (savedTheme === "dark") body.classList.add("dark-mode");
-  else if (savedTheme === "light") body.classList.remove("dark-mode");
-  else if (window.matchMedia("(prefers-color-scheme: dark)").matches) body.classList.add("dark-mode");
-
-  radios.forEach(radio => {
-    radio.addEventListener("change", () => {
-      if (radio.value === "dark") {
-        body.classList.add("dark-mode");
-        localStorage.setItem("theme", "dark");
-      } else if (radio.value === "light") {
-        body.classList.remove("dark-mode");
-        localStorage.setItem("theme", "light");
-      } else {
-        localStorage.removeItem("theme");
-        body.classList.toggle("dark-mode", window.matchMedia("(prefers-color-scheme: dark)").matches);
-      }
-    });
-  });
-
-  // ===== Avatar Modal =====
-  setupModal(document.getElementById("changeAvatar"), document.getElementById("avatarModal"));
-
-  // ===== Tips Modal =====
-  fetchModalContent(
-    document.getElementById("openTipsModal"),
-    document.getElementById("tipsModal"),
-    document.getElementById("tipsContent"),
-    document.getElementById("openTipsModal")?.href
-  );
-
-  // ===== How It Works Modal =====
-  fetchModalContent(
-    document.getElementById("openHowItWorks"),
-    document.getElementById("howItWorksModal"),
-    document.getElementById("howItWorksContent"),
-    document.getElementById("openHowItWorks")?.href || "{% url 'how_it_works' %}"
-  );
-
-
+  radios.forEach(radio => radio.addEventListener("change", () => {
+    if(radio.value==="dark"){ body.classList.add("dark-mode"); localStorage.setItem("theme","dark"); }
+    else if(radio.value==="light"){ body.classList.remove("dark-mode"); localStorage.setItem("theme","light"); }
+    else { localStorage.removeItem("theme"); body.classList.toggle("dark-mode", window.matchMedia("(prefers-color-scheme: dark)").matches); }
+  }));
 
   // ===== Avatar Selection =====
   const avatarGrid = document.querySelector(".avatar-grid");
   const avatarImg = document.getElementById("avatarToggle");
-  if (avatarGrid && avatarImg) {
-    avatarGrid.addEventListener("click", e => {
+  if(avatarGrid && avatarImg){
+    avatarGrid.addEventListener("click", e=>{
       const target = e.target;
-      if (target.tagName === "IMG" && target.dataset.avatar) {
+      if(target.tagName==="IMG" && target.dataset.avatar){
         const selectedAvatar = target.dataset.avatar;
-        const newAvatarPath = "{% static 'images/avatar' %}" + selectedAvatar + ".png";
-        avatarImg.src = newAvatarPath;
-
-        fetch("{% url 'update_avatar' %}", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": "{{ csrf_token }}"
-          },
-          body: JSON.stringify({ avatar: selectedAvatar })
-        })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) console.log("Avatar updated!");
-        })
-        .catch(err => console.error("Avatar update failed:", err));
-
-        const avatarModal = document.getElementById("avatarModal");
-        if (avatarModal) avatarModal.style.display = "none";
+        avatarImg.src = `{% static 'images/avatar' %}${selectedAvatar}.png`;
+        fetch("{% url 'update_avatar' %}",{
+          method:"POST",
+          headers: { "Content-Type":"application/json", "X-CSRFToken":"{{ csrf_token }}" },
+          body: JSON.stringify({ avatar:selectedAvatar })
+        }).then(res=>res.json()).then(data=>{ if(data.success) console.log("Avatar updated!"); });
+        document.getElementById("avatarModal").style.display="none";
       }
     });
-    
   }
+ // Handle clicks on any .close button, even dynamically loaded ones
+document.addEventListener("click", e => {
+  if (e.target.classList.contains("close")) {
+    const modal = e.target.closest(".modal");
+    if (modal) modal.style.display = "none";
+  }
+});
+
+// Handle clicks outside modal content
+window.addEventListener("click", e => {
+  if (e.target.classList.contains("modal")) {
+    e.target.style.display = "none";
+  }
+});
 
 });
+
 </script>
-
-
 {% endblock %}
 </body>
 </html>

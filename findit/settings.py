@@ -63,6 +63,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.template.context_processors.debug',
                 'django.contrib.messages.context_processors.messages',
+
+                'FindItApp.context_processors.notifications_context',
             ],
         },
     },

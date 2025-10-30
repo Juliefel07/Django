@@ -7,7 +7,10 @@
 <div class="feedback-page">
   <!-- Left: Posts -->
   <div class="posts-section">
-    <h2>Recent Feedback</h2>
+<div class="feedback-header">
+  <img src="{% static 'images/mail.png' %}" alt="Feedback Icon" class="feedback-icon">
+</div>
+
     {% for fb in feedback_list %}
     <div class="post">
       <div class="post-header">
@@ -204,39 +207,78 @@
 .posts-section {
   flex: 1.7;
   padding: 20px;
-  background: #7f7f80; /* lighter background for contrast */
+  background: #1E93AB; /* lighter background for contrast */
   border-radius: 12px;
   display: flex;
+    overflow: visible !important;
+  position: relative;
+  z-index: auto;
   flex-direction: column;
   gap: 15px;
+  border: 2px solid #3a86ff; 
 }
 
 /* Individual feedback container */
 .post {
-  background: #ffffff; /* card background */
+  background:#ffffff ;              /* make background transparent */
   padding: 15px 20px;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border: 2px solid #273F4F;          /* outline color and thickness */
+  box-shadow: none;                     /* remove shadow if you want only outline */
   transition: transform 0.2s, box-shadow 0.2s;
   position: relative;
-   z-index: 1;
+  z-index: 1;
+  overflow: visible !important;  /* prevent cutting off dropdowns */
+             /* ensure correct stacking */
+
 }
+
 
 .post:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+  border-color: #000B58;
+  z-index: 2;
 }
 
 .post-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
+  justify-content: space-between; /* keeps name on left, menu on right */
+  align-items: center;           /* vertically centers all children */
+  gap: 10px;
 }
 
+.menu-container {
+  display: flex;
+  align-items: center;  /* ensures the icon inside is vertically centered */
+}
 .post .stars {
   color: gold;
   font-size: 18px;
+}
+.feedback-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* icon on the left */
+  margin-bottom: 15px;
+}
+
+.feedback-icon {
+  width: 50px;      /* adjust size */
+  height: 50px;
+  object-fit: contain;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.feedback-icon:hover {
+  transform: scale(1.1);
+}
+.feedback-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  margin-left: 10px;
 }
 
 .post p {
@@ -262,27 +304,33 @@
 }
 
 .dropdown-menu {
-  position: absolute !important;
-  top: 50px !important;
-  right: 0 !important;
-  width: 260px !important;
-  background: white !important;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.15) !important;
+  position: absolute;
+  top: 35px;
+  right: 0;
+  width: 160px; /* adjust to your desired width */
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  padding: 6px 0;
+  display: none;
+  z-index: 9999; /* 🚀 always higher than other posts */
 }
-
 .dropdown-menu {
   display: none;
-  position: fixed;
+  position: absolute;
+  top: 30px;                  /* below the 3-dot button */
   right: 0;
-  bottom: auto; /* remove fixed bottom */
-  top: 50px;    /* default dropdown below the button */
-  background: #ffffff;
-  border: 1px solid #ddd;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  background: #fff;
+  border: 1px solid #ccc;
   border-radius: 8px;
-  overflow: hidden;
-  z-index: 9999; /* ensure above everything */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  z-index: 999999;            /* 🚀 higher than everything else */
+  
+  padding: 6px 0;
+  overflow: visible;           /* ensure dropdown content isn’t clipped */
 }
+
 
 /* Flip dropdown if it would overflow viewport */
 .menu-container.dropdown-top .dropdown-menu {
@@ -300,6 +348,25 @@
   transition: background 0.2s;
   color: black;
 }
+.feedback-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* icon on the left */
+  margin-bottom: 15px;
+}
+
+.feedback-icon {
+  width: 50px;      /* adjust size */
+  height: 50px;
+  object-fit: contain;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.feedback-icon:hover {
+  transform: scale(1.1);
+}
+
 .dropdown-menu .delete-btn{
   width: 100%;
   background: none;
@@ -317,7 +384,7 @@
   background: #10174a;
 }
 .dropdown-menu .edit-btn:hover {
-  background: #277ffa; /* blue */
+  background: #a7a9ac; /* blue */
   color: rgb(0, 0, 0);
   height: 15;
   border-radius: 0px;
@@ -325,7 +392,7 @@
 
 /* Delete button hover */
 .dropdown-menu .delete-btn:hover {
-  background: #277ffa; /* red */
+  background: #a7a9ac; /* red */
   color: rgb(3, 0, 0);
   border-radius: 0px;
 }

@@ -13,6 +13,10 @@ import json
 from .models import Student
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Notification
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
+from django.contrib.auth import update_session_auth_hash
+
 
 User = get_user_model()
 
@@ -132,7 +136,7 @@ def login_signup_view(request):
 
 def logout_view(request):
     logout(request)
-    messages.info(request, "You have been logged out.")
+    messages.info(request, "")
     return redirect("login")
 
 # ------------------------------------------------------------
@@ -193,7 +197,8 @@ def mark_item_found(request, item_id):
         item.save()
         messages.success(request, "Item marked as found.")
     return redirect("lost_item_report")
-
+def updates(request):
+    return render(request, 'updates.html')
 
 @login_required
 def item_detail(request, id):
@@ -207,7 +212,6 @@ def item_detail(request, id):
 
 @login_required
 def report_found_item(request):
-    """Handles found item reports"""
     if request.method == "POST":
         title = request.POST.get("finder_name") or "None"
         item_type = request.POST.get("item_type") or "Unknown"
@@ -217,7 +221,8 @@ def report_found_item(request):
         found_date = request.POST.get("found_date") or timezone.now().date()
         found_description = request.POST.get("found_description") or "No description provided."
 
-        Item.objects.create(
+        # Create the found item
+        found_item = Item.objects.create(
             owner=request.user,
             title=title,
             item_type=item_type,
@@ -225,6 +230,17 @@ def report_found_item(request):
             contact_number=contact_number,
             found=True,
         )
+
+        # Find potential lost items that match the title or description
+        potential_matches = Item.objects.filter(
+            found=False,  # only lost items
+        ).filter(
+            Q(title__icontains=title) | Q(description__icontains=found_description)
+        )
+
+        # Create notifications for matches
+        for lost_item in potential_matches:
+            create_match_notification(lost_item, found_item)
 
         messages.success(request, f"Found item '{title}' added to the dashboard!")
         return redirect("lost_item_report")
@@ -269,25 +285,6 @@ def delete_item(request, item_id):
 # FEEDBACK VIEWS
 # ------------------------------------------------------------
 
-@login_required
-def feedbacks(request):
-    """Displays and handles feedback submissions"""
-    if request.method == "POST":
-        name = request.POST.get("name") or "Anonymous"
-        feedback_text = request.POST.get("feedbacks")
-        rating = request.POST.get("rating") or 0
-
-        Feedback.objects.create(
-            user=request.user,
-            name=name,
-            feedbacks=feedback_text,
-            rating=rating
-        )
-        messages.success(request, "Thank you for your feedback!")
-        return redirect("feedbacks")
-
-    feedback_list = Feedback.objects.all().order_by("-id")
-    return render(request, "feedbacks.html", {"feedback_list": feedback_list})
 
 
 @login_required
@@ -342,11 +339,6 @@ def save_profile(sender, instance, **kwargs):
 # NOTIFICATIONS
 # ------------------------------------------------------------
 
-@login_required
-def notifications_view(request):
-    notifications = Notification.objects.filter(user=request.user).order_by("-created_at")
-    return render(request, "notifications.html", {"notifications": notifications})
-
 
 @login_required
 def mark_notification_read(request, id):
@@ -383,3 +375,109 @@ def privacy_view(request):
 
 def settings_view(request):
     return render(request, "settings.html")
+
+
+
+@login_required
+def feedbacks(request):
+    """Displays and handles feedback submissions"""
+    if request.method == "POST":
+        # Get the name from the form, default to "Anonymous"
+        name = request.POST.get("name") or "Anonymous"
+        feedback_text = request.POST.get("feedbacks")
+        rating = request.POST.get("rating") or 0
+
+        # Create the feedback entry
+        feedback = Feedback.objects.create(
+            user=request.user,
+            name=name,
+            feedbacks=feedback_text,
+            rating=rating
+        )
+
+        # Create a unique notification
+        notif_message = f"{name} added a feedback!"
+        # Check if the notification already exists for this feedback
+        if not Notification.objects.filter(message=notif_message, user=request.user).exists():
+            Notification.objects.create(
+                user=request.user,  # Change to admin user if needed
+                message=notif_message,
+                is_read=False
+            )
+
+        messages.success(request, "Thank you for your feedback!")
+        return redirect("feedbacks")
+
+    # Display all feedbacks
+    feedback_list = Feedback.objects.all().order_by("-id")
+    return render(request, "feedbacks.html", {"feedback_list": feedback_list})
+
+@login_required
+def notifications_view(request):
+    if request.user.is_staff:  # admin users see all notifications
+        notifications = Notification.objects.all().order_by("-created_at")
+    else:
+        notifications = Notification.objects.filter(user=request.user).order_by("-created_at")
+    return render(request, "notifications.html", {"notifications": notifications})
+
+@require_POST
+def mark_read(request, pk):
+    notif = get_object_or_404(Notification, pk=pk)
+    notif.is_read = True
+    notif.save()
+    return JsonResponse({'status': 'success'})
+
+@require_POST
+def mark_unread(request, pk):
+    notif = get_object_or_404(Notification, pk=pk)
+    notif.is_read = False
+    notif.save()
+    return JsonResponse({'status': 'success'})
+
+@require_POST
+def delete_notification(request, pk):
+    notif = get_object_or_404(Notification, pk=pk)
+    notif.delete()
+    return JsonResponse({'status': 'success'})
+
+
+@require_POST
+def clear_notifications(request):
+    Notification.objects.filter(user=request.user).delete()
+    return JsonResponse({'status': 'success'})
+    
+@login_required
+def change_password_view(request):
+    if request.method == 'POST':
+        current = request.POST.get('current_password')
+        new = request.POST.get('new_password')
+        confirm = request.POST.get('confirm_password')
+        
+        if not request.user.check_password(current):
+            messages.error(request, "Current password is incorrect.")
+        elif new != confirm:
+            messages.error(request, "New password and confirm password do not match.")
+        else:
+            request.user.set_password(new)
+            request.user.save()
+            update_session_auth_hash(request, request.user)  # Keep user logged in
+            messages.success(request, "Password updated successfully!")
+            return redirect('settings')  # ✅ FIXED — must match your urls.py
+    return render(request, 'change_password.html')
+
+@login_required
+def how_it_works(request):
+    return render(request, "how_it_works.html")
+
+@login_required
+def mark_notification_read(request, id):
+    notif = get_object_or_404(Notification, id=id, user=request.user)
+    notif.is_read = True
+    notif.save()
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+def create_match_notification(lost_item, found_item):
+    message = f"Potential match found! Lost item '{lost_item.title}' may match found item '{found_item.title}'."
+
+    # Ensure the notification is linked to the item owners
+    Notification.objects.create(user=lost_item.owner, message=message, is_read=False)

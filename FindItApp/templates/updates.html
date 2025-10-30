@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block title %}Updates{% endblock %}
+{% block content %}
+
+<div class="updates-container">
+  <h1>Latest Updates</h1>
+  <p class="subtitle">Stay informed about recent improvements, new features, and announcements.</p>
+
+  <div class="updates-list">
+    <div class="update-card">
+      <h2>🔧 System Maintenance Completed</h2>
+      <p class="date">October 25, 2025</p>
+      <p>We’ve completed system maintenance to improve site performance and fix minor bugs reported by users.</p>
+    </div>
+
+    <div class="update-card">
+      <h2>🎨 New Avatar Feature</h2>
+      <p class="date">October 20, 2025</p>
+      <p>You can now customize your profile with new avatar selections under the profile menu. Try it out!</p>
+    </div>
+
+    <div class="update-card">
+      <h2>📦 Enhanced Lost & Found Listing</h2>
+      <p class="date">October 10, 2025</p>
+      <p>Improved layout for lost items, making it easier to filter, sort, and report found objects.</p>
+    </div>
+  </div>
+</div>
+
+<style>
+.updates-container {
+  max-width: 900px;
+  margin: 60px auto;
+  padding: 30px;
+}
+
+.updates-container h1 {
+  font-size: 2.2rem;
+  color: #6c63ff;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  text-align: center;
+  color: #555;
+  margin-bottom: 40px;
+}
+
+.updates-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.update-card {
+  background: #fff;
+  border: 2px solid #e0e0ff;
+  border-left: 6px solid #6c63ff;
+  border-radius: 10px;
+  padding: 20px 25px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.update-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+}
+
+.update-card h2 {
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.update-card .date {
+  font-size: 0.9rem;
+  color: #777;
+  margin-bottom: 10px;
+}
+
+.update-card p {
+  color: #444;
+  line-height: 1.6;
+}
+</style>
+
+{% endblock %}
